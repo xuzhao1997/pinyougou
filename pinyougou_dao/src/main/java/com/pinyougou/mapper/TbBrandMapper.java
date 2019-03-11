@@ -13,4 +13,7 @@ import java.util.List;
 public interface TbBrandMapper {
     //查询所有品牌列表
     List<TbBrand> findAll();
+
+    //新增品牌
+    public void add(TbBrand tbBrand);
 }
