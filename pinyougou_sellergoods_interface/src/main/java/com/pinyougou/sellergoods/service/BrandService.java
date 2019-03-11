@@ -26,4 +26,7 @@ public interface BrandService {
 
     //修改品牌
     void update(TbBrand tbBrand);
+
+    //批量删除
+    void delete(Long[] ids);
 }
