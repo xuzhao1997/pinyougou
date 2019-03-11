@@ -1,10 +1,12 @@
 package com.pinyougou.manager.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
-import com.pinyougou.entity.PageResult;
 import com.pinyougou.pojo.TbBrand;
 import com.pinyougou.sellergoods.service.BrandService;
+import entity.PageResult;
+import entity.Result;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -39,8 +41,23 @@ public class BrandController {
     * @CreateDate:  19/03/11 下午 03:31
     */
     @RequestMapping("/findPage")
-    public PageResult findPage(Integer pageNum,Integer pageSize){
+    public PageResult findPage(Integer pageNum, Integer pageSize){
         return brandService.findPage(pageNum,pageSize);
     }
 
+    /**
+     * @Description: 新增品牌
+     * @Author:      XuZhao
+     * @CreateDate:  19/03/11 下午 04:39
+     */
+    @RequestMapping("/add")
+    public Result add(@RequestBody TbBrand tbBrand){
+        try {
+            brandService.add(tbBrand);
+            return new Result(true,"新增成功!!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false,"新增失败!!");
+        }
+    }
 }
