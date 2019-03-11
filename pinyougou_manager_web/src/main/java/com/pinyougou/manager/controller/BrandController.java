@@ -40,9 +40,9 @@ public class BrandController {
     * @Author:      XuZhao
     * @CreateDate:  19/03/11 下午 03:31
     */
-    @RequestMapping("/findPage")
-    public PageResult findPage(Integer pageNum, Integer pageSize){
-        return brandService.findPage(pageNum,pageSize);
+    @RequestMapping("/search")
+    public PageResult search(@RequestBody TbBrand brand,Integer pageNum, Integer pageSize){
+        return brandService.search(pageNum,pageSize,brand);
     }
 
     /**
@@ -101,4 +101,5 @@ public class BrandController {
             return new Result(true,"删除失败!!!");
         }
     }
+
 }
