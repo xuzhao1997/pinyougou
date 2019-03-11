@@ -1,6 +1,7 @@
 package com.pinyougou.manager.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.pinyougou.entity.PageResult;
 import com.pinyougou.pojo.TbBrand;
 import com.pinyougou.sellergoods.service.BrandService;
 import org.springframework.stereotype.Controller;
@@ -22,9 +23,24 @@ public class BrandController {
     @Reference
     private BrandService brandService;
 
+    /**
+    * @Description: 查询全部列表
+    * @Author:      XuZhao
+    * @CreateDate:  19/03/11 下午 03:30
+    */
     @RequestMapping("/findAll")
     public List<TbBrand> findAll(){
         return brandService.findAll();
+    }
+
+    /**
+    * @Description: 分页查询品牌列表
+    * @Author:      XuZhao
+    * @CreateDate:  19/03/11 下午 03:31
+    */
+    @RequestMapping("/findPage")
+    public PageResult findPage(Integer pageNum,Integer pageSize){
+        return brandService.findPage(pageNum,pageSize);
     }
 
 }
