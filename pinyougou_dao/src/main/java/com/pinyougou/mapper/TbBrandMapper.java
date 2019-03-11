@@ -22,4 +22,7 @@ public interface TbBrandMapper {
 
     //品牌修改
     void updateByPrimaryKey(TbBrand tbBrand);
+
+    //批量删除
+    void deleteByPrimaryKey(Long id);
 }
