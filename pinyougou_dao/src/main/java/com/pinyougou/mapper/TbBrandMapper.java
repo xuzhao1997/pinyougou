@@ -1,5 +1,6 @@
 package com.pinyougou.mapper;
 
+import com.github.pagehelper.Page;
 import com.pinyougou.pojo.TbBrand;
 
 import java.util.List;
@@ -25,4 +26,7 @@ public interface TbBrandMapper {
 
     //批量删除
     void deleteByPrimaryKey(Long id);
+
+    //条件查询
+    public List<TbBrand> findByBrand(TbBrand brand);
 }
