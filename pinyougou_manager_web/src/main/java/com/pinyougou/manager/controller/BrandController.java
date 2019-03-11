@@ -60,4 +60,30 @@ public class BrandController {
             return new Result(false,"新增失败!!");
         }
     }
+    /**
+    * @Description: 根据id回显数据
+    * @Author:      XuZhao
+    * @CreateDate:  19/03/11 下午 04:59
+    */
+    @RequestMapping("/findOne")
+    public TbBrand fidOne(Long id){
+        return brandService.findOne(id);
+    }
+
+    /**
+    * @Description: 品牌修改
+    * @Author:      XuZhao
+    * @CreateDate:  19/03/11 下午 05:01
+    */
+    @RequestMapping("/update")
+    public Result update(@RequestBody TbBrand tbBrand){
+        try {
+            brandService.update(tbBrand);
+            return new Result(true,"修改成功!!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false,"修改失败!!!");
+        }
+    }
+
 }
