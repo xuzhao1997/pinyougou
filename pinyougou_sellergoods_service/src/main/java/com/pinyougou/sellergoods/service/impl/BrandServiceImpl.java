@@ -1,6 +1,9 @@
 package com.pinyougou.sellergoods.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.pinyougou.entity.PageResult;
 import com.pinyougou.mapper.TbBrandMapper;
 import com.pinyougou.pojo.TbBrand;
 import com.pinyougou.sellergoods.service.BrandService;
@@ -25,5 +28,17 @@ public class BrandServiceImpl implements BrandService {
     @Override
     public List<TbBrand> findAll() {
         return brandMapper.findAll();
+    }
+
+    /**
+    * @Description: 分页查询品牌列表
+    * @Author:      XuZhao
+    * @CreateDate:  19/03/11 下午 03:40
+    */
+    @Override
+    public PageResult findPage(Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum,pageSize);
+        Page<TbBrand> page = (Page<TbBrand>) brandMapper.findAll();
+        return new PageResult(page.getTotal(),page.getResult());
     }
 }
