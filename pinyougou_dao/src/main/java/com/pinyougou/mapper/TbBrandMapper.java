@@ -16,4 +16,10 @@ public interface TbBrandMapper {
 
     //新增品牌
     public void add(TbBrand tbBrand);
+
+    //根据id查询
+    TbBrand selectByPrimaryKey(Long id);
+
+    //品牌修改
+    void updateByPrimaryKey(TbBrand tbBrand);
 }
