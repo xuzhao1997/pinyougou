@@ -3,12 +3,15 @@ package com.pinyougou.sellergoods.service.impl;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.pinyougou.entity.PageResult;
 import com.pinyougou.mapper.TbBrandMapper;
 import com.pinyougou.pojo.TbBrand;
 import com.pinyougou.sellergoods.service.BrandService;
+import entity.PageResult;
+import entity.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
@@ -41,4 +44,16 @@ public class BrandServiceImpl implements BrandService {
         Page<TbBrand> page = (Page<TbBrand>) brandMapper.findAll();
         return new PageResult(page.getTotal(),page.getResult());
     }
+
+    /**
+    * @Description: 新增品牌
+    * @Author:      XuZhao
+    * @CreateDate:  19/03/11 下午 04:42
+    */
+    @Override
+    public void add(TbBrand tbBrand) {
+        brandMapper.add(tbBrand);
+    }
+
+
 }
