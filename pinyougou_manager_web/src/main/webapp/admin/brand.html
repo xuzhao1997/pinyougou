@@ -13,9 +13,13 @@
     <script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
     <!--引入angularjs资源-->
     <script type="text/javascript" src="../plugins/angularjs/angular.min.js"></script>
+	<!--引入angularjs分页插件-->
+	<link rel="stylesheet" href="../plugins/angularjs/pagination.css">
+	<script type="text/javascript" src="../plugins/angularjs/pagination.js"></script>
+
 
     <script type="text/javascript">
-        var app = angular.module('pinyougou',[]);
+        var app = angular.module('pinyougou',['pagination']);
         app.controller('brandController',function ($scope,$http) {
             $scope.findAll=function () {
                 $http.get('../brand/findAll.do').success(
@@ -23,7 +27,29 @@
                         $scope.list = response;
                     }
                 )
+            };
+            //定义分页控件对象
+            $scope.paginationConf = {
+                currentPage:1,  				//当前页
+                totalItems:10,					//总记录数
+                itemsPerPage:10,				//每页记录数
+                perPageOptions:[10,20,30,40,50], //分页选项，下拉选择一页多少条记录
+                onChange:function(){			//页面变更后触发的方法
+                    $scope.reloadList();		//启动就会调用分页组件
+                }
+            };
+			$scope.reloadList=function () {
+				$scope.findPage($scope.paginationConf.currentPage,$scope.pageinationConf.itemsPerPage);
             }
+			//发起分页查询请求
+			$scope.findPage=function (pageNum,pageSize) {
+				$http.get("../brand/findPage.do?pageNum="+pageNum+"&pageSize="+pageSize).success(function (response) {
+					$scope.list=response.rows;//当前页结果集
+					$scope.paginationConf.totalItems=response.total;//查询总记录数
+                })
+            }
+
+
         })
     </script>
 </head>
@@ -85,7 +111,8 @@
 							 
                         </div>
                         <!-- 数据表格 /-->
-                        
+						<!--分页组件-->
+						<tm-pagination conf="paginationConf" />
                         
                         
                         
