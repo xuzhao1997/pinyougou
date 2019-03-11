@@ -49,9 +49,25 @@
                 })
             }
 
+            //根据id查询回显数据
+            $scope.findOne=function (id) {
+                $http.get("../brand/findOne.do?id="+id).success(function (response) {
+                    $scope.entity=response;
+                });
+            }
             //品牌新增
+			$scope.entity = {}
 			$scope.save = function () {
-				$http.post('../brand/add.do',$scope.entity).success(
+			    var methodName = "";
+                //基于entity的id值判断是新增还是修改
+				if($scope.entity.id!=null){
+                    //修改操作
+					methodName="update.do";
+				}else{
+				    //新增操作
+					methodName="add.do";
+				}
+				$http.post('../brand/'+methodName,$scope.entity).success(
 				    function (response) {
 						if(response.success){
 							$scope.reloadList();
@@ -113,7 +129,7 @@
 									      <td>{{pojo.name}}</td>
 		                                  <td>{{pojo.firstChar}}</td>
 		                                  <td class="text-center">                                           
-		                                 	  <button type="button" class="btn bg-olive btn-xs" data-toggle="modal" data-target="#editModal"  >修改</button>                                           
+		                                 	  <button type="button" ng-click="findOne(pojo.id)" class="btn bg-olive btn-xs" data-toggle="modal" data-target="#editModal" >修改</button>
 		                                  </td>
 			                          </tr>
 			                      </tbody>
