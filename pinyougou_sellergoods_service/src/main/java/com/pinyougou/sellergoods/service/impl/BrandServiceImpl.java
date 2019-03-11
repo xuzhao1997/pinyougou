@@ -55,5 +55,25 @@ public class BrandServiceImpl implements BrandService {
         brandMapper.add(tbBrand);
     }
 
+    /**
+    * @Description: 根据id查询
+    * @Author:      XuZhao
+    * @CreateDate:  19/03/11 下午 05:04
+    */
+    @Override
+    public TbBrand findOne(Long id) {
+        return brandMapper.selectByPrimaryKey(id);
+    }
+
+    /**
+    * @Description: 修改品牌
+    * @Author:      XuZhao
+    * @CreateDate:  19/03/11 下午 05:04
+    */
+    @Override
+    public void update(TbBrand tbBrand) {
+        brandMapper.updateByPrimaryKey(tbBrand);
+    }
+
 
 }
