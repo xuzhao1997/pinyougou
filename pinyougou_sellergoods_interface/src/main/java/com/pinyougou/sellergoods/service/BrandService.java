@@ -20,4 +20,10 @@ public interface BrandService {
 
     //新增品牌
     void add(TbBrand tbBrand);
+
+    //根据id查询
+    TbBrand findOne(Long id);
+
+    //修改品牌
+    void update(TbBrand tbBrand);
 }
