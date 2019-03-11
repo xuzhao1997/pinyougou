@@ -12,7 +12,7 @@
 	<script src="../plugins/jQuery/jquery-2.2.3.min.js"></script>
     <script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
     <!--引入angularjs资源-->
-    <script type="text/javascript" src="../plugins/angularjs/angular.min.js"></script>
+    <script type="text/javascript" src="../plugins/angularjs/angular.js"></script>
 	<!--引入angularjs分页插件-->
 	<link rel="stylesheet" href="../plugins/angularjs/pagination.css">
 	<script type="text/javascript" src="../plugins/angularjs/pagination.js"></script>
@@ -78,6 +78,37 @@
 				)
             }
 
+            //定义一个批量删除的数组
+			$scope.selectIds=[];
+			//更新复选框选中状态的方法
+			$scope.updateSelection=function ($event,id) {
+                if($event.target.checked){
+                    $scope.selectIds.push(id);
+				}else{
+                    var index = $scope.selectIds.indexOf(id);
+                    $scope.selectIds.splice(index,1);
+				}
+            }
+            //批量删除数据
+			$scope.dele=function () {
+				if(confirm('您确定要删除吗?')){
+				    $http.get("../brand/delete.do?ids="+$scope.selectIds).success(function (response) {
+						if(response.success){
+                            $scope.reloadList();
+                            $scope.selectIds=[];//清空勾选的id数组
+						}else{
+						    alert(response.message);
+						}
+                    })
+				}
+            }
+            //是否选中为了翻页后回来还能勾选上
+            $scope.isChecked = function(id){
+                if($scope.selectIds.indexOf(id)!= -1){
+                    return true;
+                }
+                return false;
+            }
         })
     </script>
 </head>
@@ -97,9 +128,9 @@
                                 <div class="form-group form-inline">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-default" title="新建" data-toggle="modal" data-target="#editModal" ng-click="entity={}" ><i class="fa fa-file-o"></i> 新建</button>
-                                        <button type="button" class="btn btn-default" title="删除" ><i class="fa fa-trash-o"></i> 删除</button>           
+                                        <button type="button"  ng-click="dele()" class="btn btn-default" title="删除" ><i class="fa fa-trash-o"></i> 删除</button>
                                         <button type="button" class="btn btn-default" title="刷新" onclick="window.location.reload();"><i class="fa fa-refresh"></i> 刷新</button>
-                                    </div>
+                                    </div>{{selectIds}}
                                 </div>
                             </div>
                             <div class="box-tools pull-right">
@@ -114,7 +145,7 @@
 			                      <thead>
 			                          <tr>
 			                              <th class="" style="padding-right:0px">
-			                                  <input id="selall" type="checkbox" class="icheckbox_square-blue">
+			                                  <input id="selall" type="checkbox"  class="icheckbox_square-blue">
 			                              </th> 
 										  <th class="sorting_asc">品牌ID</th>
 									      <th class="sorting">品牌名称</th>									      
@@ -124,7 +155,7 @@
 			                      </thead>
 			                      <tbody>
 			                          <tr ng-repeat="pojo in list">
-			                              <td><input  type="checkbox" ></td>			                              
+			                              <td><input  type="checkbox" ng-click="updateSelection($event,pojo.id)"></td>
 				                          <td>{{pojo.id}}</td>
 									      <td>{{pojo.name}}</td>
 		                                  <td>{{pojo.firstChar}}</td>
