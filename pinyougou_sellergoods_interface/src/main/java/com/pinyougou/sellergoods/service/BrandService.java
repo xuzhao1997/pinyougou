@@ -29,4 +29,7 @@ public interface BrandService {
 
     //批量删除
     void delete(Long[] ids);
+
+    //条件查询
+    public PageResult search(Integer pageNum, Integer pageSize, TbBrand brand);
 }
