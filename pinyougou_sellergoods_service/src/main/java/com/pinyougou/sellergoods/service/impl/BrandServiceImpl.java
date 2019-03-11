@@ -75,5 +75,17 @@ public class BrandServiceImpl implements BrandService {
         brandMapper.updateByPrimaryKey(tbBrand);
     }
 
+    /**
+    * @Description: 批量删除
+    * @Author:      XuZhao
+    * @CreateDate:  19/03/11 下午 05:35
+    */
+    @Override
+    public void delete(Long[] ids) {
+        for (Long id : ids) {
+            brandMapper.deleteByPrimaryKey(id);
+        }
+    }
+
 
 }
