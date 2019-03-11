@@ -87,5 +87,17 @@ public class BrandServiceImpl implements BrandService {
         }
     }
 
+    /**
+    * @Description: 条件查询
+    * @Author:      XuZhao
+    * @CreateDate:  19/03/11 下午 07:46
+    */
+    @Override
+    public PageResult search(Integer pageNum, Integer pageSize, TbBrand brand) {
+        PageHelper.startPage(pageNum,pageSize);
+        Page page = (Page) brandMapper.findByBrand(brand);
+        return new PageResult(page.getTotal(),page.getResult());
+    }
+
 
 }
