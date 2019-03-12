@@ -16,4 +16,10 @@ public interface SpecificationService {
 
     //新增规格
     void insert(Specification specification);
+
+    //修改操作的数据回显
+    Specification findOne(Long id);
+
+    //修改规格
+    void update(Specification specification);
 }
