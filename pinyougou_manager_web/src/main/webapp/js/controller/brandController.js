@@ -32,8 +32,8 @@ app.controller("brandController",function ($scope,$controller,brandService) {
     $scope.searchEntity={};
 
     //条件分页查询请求
-    $scope.findPage=function (pageNum,pageSize) {
-        brandService.findPage(pageNum,pageSize,$scope.searchEntity).success(function (response) {
+    $scope.search=function (pageNum,pageSize) {
+        brandService.search(pageNum,pageSize,$scope.searchEntity).success(function (response) {
             //response = {total:100,rows:[{},{}]}
             $scope.list=response.rows;//当前页结果集
             $scope.paginationConf.totalItems=response.total;//查询总记录数
