@@ -30,4 +30,6 @@ public interface BrandService {
     //批量删除
     void delete(Long[] ids);
 
+    //品牌分页查询
+    PageResult search(TbBrand brand, Integer pageNum, Integer pageSize);
 }
