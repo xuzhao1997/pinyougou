@@ -4,6 +4,8 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import com.pinyougou.pojo.TbSpecification;
 import com.pinyougou.sellergoods.service.SpecificationService;
 import entity.PageResult;
+import entity.Result;
+import groupEntity.Specification;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,6 +33,21 @@ public class SpecificationController {
     public PageResult search (@RequestBody TbSpecification specification,Integer pageNum,Integer pageSize){
         return specificationService.search(specification,pageNum,pageSize);
     }
+    /**
+    * @Description: 新增规格
+    * @Author:      XuZhao
+    * @CreateDate:  19/03/12 下午 09:40
+    */
 
+    @RequestMapping("/add")
+    public Result insert(@RequestBody Specification specification){
 
+        try {
+            specificationService.insert(specification);
+            return new Result(true,"新增成功!!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(true,"新增不成功!!");
+        }
+    }
 }
