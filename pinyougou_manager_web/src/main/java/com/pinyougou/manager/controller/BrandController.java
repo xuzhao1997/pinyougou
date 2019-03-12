@@ -2,6 +2,7 @@ package com.pinyougou.manager.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.pinyougou.pojo.TbBrand;
+import com.pinyougou.pojo.TbSpecification;
 import com.pinyougou.sellergoods.service.BrandService;
 import entity.PageResult;
 import entity.Result;
@@ -100,6 +101,16 @@ public class BrandController {
             e.printStackTrace();
             return new Result(true,"删除失败!!!");
         }
+    }
+
+    /**
+     * @Description: 条件分页查询
+     * @Author:      XuZhao
+     * @CreateDate:  19/03/12 下午 07:10
+     */
+    @RequestMapping("/search")
+    public PageResult search (@RequestBody TbBrand brand, Integer pageNum, Integer pageSize){
+        return brandService.search(brand,pageNum,pageSize);
     }
 
 }
