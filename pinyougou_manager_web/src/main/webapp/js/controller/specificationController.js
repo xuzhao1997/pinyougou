@@ -59,13 +59,14 @@ app.controller("specificationController",function ($scope,$controller,specificat
         });
     }
 
-    $scope.entity={};
-    //保存品牌数据
+    //初始化组合实体类
+    $scope.entity={specification:{},specificationOptions:[]};
+    //保存规格
     $scope.save=function () {
 
         var method=null;
         //基于entity的id值判断是新增还是修改
-        if($scope.entity.id!=null){
+        if($scope.entity.specification.id!=null){
             //修改操作
             method=specificationService.update($scope.entity);
         }else {
@@ -102,7 +103,14 @@ app.controller("specificationController",function ($scope,$controller,specificat
                 }
             })
         }
-
+    }
+    //新增规格选项
+    $scope.addRow=function () {
+        $scope.entity.specificationOptions.push({});
+    }
+    //删除规格选项
+    $scope.deleRow=function (index) {
+        $scope.entity.specificationOptions.splice(index,1);
     }
 
 });
