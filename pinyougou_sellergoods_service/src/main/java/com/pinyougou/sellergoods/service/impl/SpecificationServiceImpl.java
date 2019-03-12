@@ -4,10 +4,13 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.pinyougou.mapper.TbSpecificationMapper;
+import com.pinyougou.mapper.TbSpecificationOptionMapper;
 import com.pinyougou.pojo.TbSpecification;
 import com.pinyougou.pojo.TbSpecificationExample;
+import com.pinyougou.pojo.TbSpecificationOption;
 import com.pinyougou.sellergoods.service.SpecificationService;
 import entity.PageResult;
+import groupEntity.Specification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +29,9 @@ public class SpecificationServiceImpl implements SpecificationService {
 
     @Autowired
     private TbSpecificationMapper specificationMapper;
+
+    @Autowired
+    private TbSpecificationOptionMapper specificationOptionMapper;
 
     /**
     * @Description: 分页查询所有规格
@@ -55,5 +61,26 @@ public class SpecificationServiceImpl implements SpecificationService {
         Page<TbSpecification> page = (Page<TbSpecification>) specificationMapper.selectByExample(example);
 
         return new PageResult(page.getTotal(),page.getResult());
+    }
+
+    /**
+    * @Description: 新增规格
+    * @Author:      XuZhao
+    * @CreateDate:  19/03/12 下午 09:43
+    */
+    @Override
+    public void insert(Specification specification) {
+
+        TbSpecification tbSpecification = specification.getSpecification();
+        //保存规格
+        specificationMapper.insert(tbSpecification);
+        //保存规格选项
+        List<TbSpecificationOption> specificationOptions = specification.getSpecificationOptions();
+        for (TbSpecificationOption specificationOption : specificationOptions) {
+            //规格选项关联规格id
+            specificationOption.setSpecId(tbSpecification.getId());
+            specificationOptionMapper.insert(specificationOption);
+        }
+
     }
 }
