@@ -8,6 +8,11 @@ app.service("brandService",function ($http) {
     this.findPage=function (pageNum,pageSize) {
         return $http.get("../brand/findPage.do?pageNum="+pageNum+"&pageSize="+pageSize);
     }
+    //条件分页查询
+    this.search=function (pageNum,pageSize,searchEntity) {
+        return $http.post("../brand/search.do?pageNum="+pageNum+"&pageSize="+pageSize,searchEntity);
+    }
+
     //根据id回显数据
     this.findOne=function (id) {
         return $http.get("../brand/findOne.do?id="+id);
