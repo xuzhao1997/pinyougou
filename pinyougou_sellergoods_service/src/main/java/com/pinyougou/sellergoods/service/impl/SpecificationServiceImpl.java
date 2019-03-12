@@ -8,6 +8,7 @@ import com.pinyougou.mapper.TbSpecificationOptionMapper;
 import com.pinyougou.pojo.TbSpecification;
 import com.pinyougou.pojo.TbSpecificationExample;
 import com.pinyougou.pojo.TbSpecificationOption;
+import com.pinyougou.pojo.TbSpecificationOptionExample;
 import com.pinyougou.sellergoods.service.SpecificationService;
 import entity.PageResult;
 import groupEntity.Specification;
@@ -81,6 +82,54 @@ public class SpecificationServiceImpl implements SpecificationService {
             specificationOption.setSpecId(tbSpecification.getId());
             specificationOptionMapper.insert(specificationOption);
         }
+
+    }
+
+    /**
+    * @Description: 修改时的数据回显操作
+    * @Author:      XuZhao
+    * @CreateDate:  19/03/12 下午 10:34
+    */
+    @Override
+    public Specification findOne(Long id) {
+        Specification specification = new Specification();
+        //规格数据对象
+        TbSpecification tbSpecification = specificationMapper.selectByPrimaryKey(id);
+        specification.setSpecification(tbSpecification);
+        //规格选项列表数据
+        TbSpecificationOptionExample example = new TbSpecificationOptionExample();
+        TbSpecificationOptionExample.Criteria criteria = example.createCriteria();
+        criteria.andSpecIdEqualTo(id);
+        List<TbSpecificationOption> tbSpecificationOptions = specificationOptionMapper.selectByExample(example);
+        specification.setSpecificationOptions(tbSpecificationOptions);
+        return specification;
+    }
+
+    /**
+    * @Description: 修改规格
+    * @Author:      XuZhao
+    * @CreateDate:  19/03/12 下午 10:35
+    */
+    @Override
+    public void update(Specification specification) {
+        //修改规格数据
+        TbSpecification tbspecification1 = specification.getSpecification();
+        specificationMapper.updateByPrimaryKey(tbspecification1);
+        //修改规格选项,先删除之前的规格选项列表,在重新保存页面提交的
+
+        //删除之前的
+        TbSpecificationOptionExample example = new TbSpecificationOptionExample();
+        TbSpecificationOptionExample.Criteria criteria = example.createCriteria();
+        criteria.andSpecIdEqualTo(tbspecification1.getId());
+        specificationOptionMapper.deleteByExample(example);
+
+        //删完之后再保存页面新添加的数据
+        List<TbSpecificationOption> specificationOptions = specification.getSpecificationOptions();
+        for (TbSpecificationOption specificationOption : specificationOptions) {
+            specificationOption.setSpecId(tbspecification1.getId());
+            specificationOptionMapper.insert(specificationOption);
+        }
+
 
     }
 }
