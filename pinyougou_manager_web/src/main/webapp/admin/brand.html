@@ -17,109 +17,10 @@
 	<link rel="stylesheet" href="../plugins/angularjs/pagination.css">
 	<script type="text/javascript" src="../plugins/angularjs/pagination.js"></script>
 
+	<script type="text/javascript" src="../js/base_pagination.js"></script>
+	<script type="text/javascript" src="../js/service/brandService.js"></script>
+	<script type="text/javascript" src="../js/controller/brandController.js"></script>
 
-    <script type="text/javascript">
-        var app = angular.module('pinyougou',['pagination']);
-        app.controller('brandController',function ($scope,$http) {
-            $scope.findAll=function () {
-                $http.get('../brand/findAll.do').success(
-                    function (response) {
-                        $scope.list = response;
-                    }
-                )
-            };
-            //定义分页控件对象
-            $scope.paginationConf = {
-                currentPage:1,  				//当前页
-                totalItems:10,					//总记录数
-                itemsPerPage:10,				//每页记录数
-                perPageOptions:[10,20,30,40,50], //分页选项，下拉选择一页多少条记录
-                onChange:function(){			//页面变更后触发的方法
-                    $scope.reloadList();		//启动就会调用分页组件
-                }
-            };
-			/*$scope.reloadList=function () {
-				$scope.findPage($scope.paginationConf.currentPage,$scope.paginationConf.itemsPerPage);
-            }
-			//发起分页查询请求
-			$scope.findPage=function (pageNum,pageSize) {
-				$http.get("../brand/findPage.do?pageNum="+pageNum+"&pageSize="+pageSize).success(function (response) {
-					$scope.list=response.rows;//当前页结果集
-					$scope.paginationConf.totalItems=response.total;//查询总记录数
-                })
-            }*/
-            $scope.searchEntity={};  //解决初始请求参数为空的问题
-            $scope.reloadList = function(){
-                $http.post('../brand/search.do?pageNum='+$scope.paginationConf.currentPage+"&pageSize="+$scope.paginationConf.itemsPerPage,$scope.searchEntity).success(
-                    function(response){
-                        $scope.list = response.rows;
-                        $scope.paginationConf.totalItems = response.total;
-                    }
-                )
-            }
-
-            //根据id查询回显数据
-            $scope.findOne=function (id) {
-                $http.get("../brand/findOne.do?id="+id).success(function (response) {
-                    $scope.entity=response;
-                });
-            }
-            //品牌新增
-			$scope.entity = {}
-			$scope.save = function () {
-			    var methodName = "";
-                //基于entity的id值判断是新增还是修改
-				if($scope.entity.id!=null){
-                    //修改操作
-					methodName="update.do";
-				}else{
-				    //新增操作
-					methodName="add.do";
-				}
-				$http.post('../brand/'+methodName,$scope.entity).success(
-				    function (response) {
-						if(response.success){
-							$scope.reloadList();
-						}else{
-						    alert(response.message);
-						}
-                    }
-				)
-            }
-
-            //定义一个批量删除的数组
-			$scope.selectIds=[];
-			//更新复选框选中状态的方法
-			$scope.updateSelection=function ($event,id) {
-                if($event.target.checked){
-                    $scope.selectIds.push(id);
-				}else{
-                    var index = $scope.selectIds.indexOf(id);
-                    $scope.selectIds.splice(index,1);
-				}
-            }
-            //批量删除数据
-			$scope.dele=function () {
-				if(confirm('您确定要删除吗?')){
-				    $http.get("../brand/delete.do?ids="+$scope.selectIds).success(function (response) {
-						if(response.success){
-                            $scope.reloadList();
-                            $scope.selectIds=[];//清空勾选的id数组
-						}else{
-						    alert(response.message);
-						}
-                    })
-				}
-            }
-            //是否选中为了翻页后回来还能勾选上
-            $scope.isChecked = function(id){
-                if($scope.selectIds.indexOf(id)!= -1){
-                    return true;
-                }
-                return false;
-            }
-        })
-    </script>
 </head>
 <body class="hold-transition skin-red sidebar-mini" ng-app="pinyougou" ng-controller="brandController" ng-init="findAll()">
   <!-- .box-body -->
@@ -141,15 +42,14 @@
                                         <button type="button" class="btn btn-default" title="刷新" onclick="window.location.reload();"><i class="fa fa-refresh"></i> 刷新</button>
                                     </div>
 									<div>
-										品牌名称:<input ng-model="searchEntity.name">
-										品牌首字母:<input ng-model="searchEntity.firstChar">
-										<button class="btn btn-default" ng-click="reloadList()">查询</button>
 									</div>
                                 </div>
                             </div>
                             <div class="box-tools pull-right">
                                 <div class="has-feedback">
-							                                         
+									品牌名称:<input ng-model="searchEntity.name">
+									品牌首字母:<input ng-model="searchEntity.firstChar">
+									<button class="btn btn-default" ng-click="reloadList()">查询</button>
                                 </div>
                             </div>
                             <!--工具栏/-->
