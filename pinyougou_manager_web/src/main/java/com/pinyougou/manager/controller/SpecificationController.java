@@ -50,4 +50,31 @@ public class SpecificationController {
             return new Result(true,"新增不成功!!");
         }
     }
+
+    /**
+    * @Description: 修改的数据回显
+    * @Author:      XuZhao
+    * @CreateDate:  19/03/12 下午 10:31
+    */
+    @RequestMapping("/findOne")
+    public Specification findOne(Long id){
+        return specificationService.findOne(id);
+    }
+    /**
+    * @Description: 修改规格
+    * @Author:      XuZhao
+    * @CreateDate:  19/03/12 下午 10:32
+    */
+    @RequestMapping("/update")
+    public Result update(@RequestBody Specification specification){
+
+        try {
+            specificationService.update(specification);
+            return new Result(true,"修改成功!!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(true,"修改失败!!");
+        }
+    }
+
 }
