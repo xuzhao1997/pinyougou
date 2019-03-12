@@ -1,32 +1,31 @@
 package com.pinyougou.mapper;
 
-import com.github.pagehelper.Page;
 import com.pinyougou.pojo.TbBrand;
+import com.pinyougou.pojo.TbBrandExample;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-/**
- * @ClassName: TbBrandMapper
- * @Description: 品牌接口层
- * @Author: XuZhao
- * @CreateDate: 19/03/09$ 下午 07:35$
- */
 public interface TbBrandMapper {
-    //查询所有品牌列表
-    List<TbBrand> findAll();
+    int countByExample(TbBrandExample example);
 
-    //新增品牌
-    public void add(TbBrand tbBrand);
+    int deleteByExample(TbBrandExample example);
 
-    //根据id查询
+    int deleteByPrimaryKey(Long id);
+
+    int insert(TbBrand record);
+
+    int insertSelective(TbBrand record);
+
+    List<TbBrand> selectByExample(TbBrandExample example);
+
     TbBrand selectByPrimaryKey(Long id);
 
-    //品牌修改
-    void updateByPrimaryKey(TbBrand tbBrand);
+    int updateByExampleSelective(@Param("record") TbBrand record, @Param("example") TbBrandExample example);
 
-    //批量删除
-    void deleteByPrimaryKey(Long id);
+    int updateByExample(@Param("record") TbBrand record, @Param("example") TbBrandExample example);
 
-    //条件查询
-    public List<TbBrand> findByBrand(TbBrand brand);
+    int updateByPrimaryKeySelective(TbBrand record);
+
+    int updateByPrimaryKey(TbBrand record);
 }
