@@ -1,4 +1,5 @@
-app.constructor("baseController",function ($scope) {
+app.controller("baseController",function ($scope) {
+
     //定义分页控件对象
     $scope.paginationConf = {
         currentPage:1,  				//当前页
@@ -9,18 +10,27 @@ app.constructor("baseController",function ($scope) {
             $scope.reloadList();		//启动就会调用分页组件
         }
     };
+
     $scope.reloadList=function () {
         $scope.findPage($scope.paginationConf.currentPage,$scope.paginationConf.itemsPerPage);
     }
 
-    //定义一个批量删除的数组
+    //定义批量删除的数组
     $scope.selectIds=[];
+
     //更新复选框选中状态的方法
     $scope.updateSelection=function ($event,id) {
+        //获取复选框勾选状态
+        //$event.target获取事件源对象 就是复选框对象
         if($event.target.checked){
+            //勾选操作
+            //js 往数组添加值 push()
             $scope.selectIds.push(id);
-        }else{
-            var index = $scope.selectIds.indexOf(id);
+        }else {
+            //取消勾选
+            //获取移除元素的索引值
+            var index=$scope.selectIds.indexOf(id);
+            //参数一：移除位置的元素的索引值  参数二：从该位置移除几个元素
             $scope.selectIds.splice(index,1);
         }
     }
