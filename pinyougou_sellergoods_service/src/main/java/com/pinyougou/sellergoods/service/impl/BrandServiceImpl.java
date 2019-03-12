@@ -30,7 +30,7 @@ public class BrandServiceImpl implements BrandService {
 
     @Override
     public List<TbBrand> findAll() {
-        return brandMapper.findAll();
+        return brandMapper.selectByExample(null);
     }
 
     /**
@@ -41,7 +41,7 @@ public class BrandServiceImpl implements BrandService {
     @Override
     public PageResult findPage(Integer pageNum, Integer pageSize) {
         PageHelper.startPage(pageNum,pageSize);
-        Page<TbBrand> page = (Page<TbBrand>) brandMapper.findAll();
+        Page<TbBrand> page = (Page<TbBrand>) brandMapper.selectByExample(null);
         return new PageResult(page.getTotal(),page.getResult());
     }
 
@@ -52,7 +52,7 @@ public class BrandServiceImpl implements BrandService {
     */
     @Override
     public void add(TbBrand tbBrand) {
-        brandMapper.add(tbBrand);
+        brandMapper.insert(tbBrand);
     }
 
     /**
@@ -85,18 +85,6 @@ public class BrandServiceImpl implements BrandService {
         for (Long id : ids) {
             brandMapper.deleteByPrimaryKey(id);
         }
-    }
-
-    /**
-    * @Description: 条件查询
-    * @Author:      XuZhao
-    * @CreateDate:  19/03/11 下午 07:46
-    */
-    @Override
-    public PageResult search(Integer pageNum, Integer pageSize, TbBrand brand) {
-        PageHelper.startPage(pageNum,pageSize);
-        Page page = (Page) brandMapper.findByBrand(brand);
-        return new PageResult(page.getTotal(),page.getResult());
     }
 
 
