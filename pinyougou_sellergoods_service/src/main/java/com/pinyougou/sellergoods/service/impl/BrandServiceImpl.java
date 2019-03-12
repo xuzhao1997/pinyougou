@@ -5,6 +5,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.pinyougou.mapper.TbBrandMapper;
 import com.pinyougou.pojo.TbBrand;
+import com.pinyougou.pojo.TbBrandExample;
 import com.pinyougou.sellergoods.service.BrandService;
 import entity.PageResult;
 import entity.Result;
@@ -85,6 +86,36 @@ public class BrandServiceImpl implements BrandService {
         for (Long id : ids) {
             brandMapper.deleteByPrimaryKey(id);
         }
+    }
+
+    /**
+    * @Description: 品牌分页条件查询
+    * @Author:      XuZhao
+    * @CreateDate:  19/03/12 下午 09:11
+    */
+    @Override
+    public PageResult search(TbBrand brand, Integer pageNum, Integer pageSize) {
+        //设置分页条件
+        PageHelper.startPage(pageNum,pageSize);
+        //设置查询条件
+        TbBrandExample example = new TbBrandExample();
+        TbBrandExample.Criteria criteria = example.createCriteria();
+        //获取页面查询条件参数
+        if(brand != null){
+            //获取品牌名称的条件
+            String brandName = brand.getName();
+            //如果走就证明输入了名称条件
+            if(brandName != null && !"".equals(brandName)){
+                criteria.andNameLike("%"+brandName+"%");
+            }
+            //品牌首字母等值查询
+            String firstChar = brand.getFirstChar();
+            if(firstChar != null && !"".equals(firstChar)){
+                criteria.andFirstCharLike("%"+firstChar+"%");
+            }
+        }
+        Page<TbBrand> page = (Page<TbBrand>) brandMapper.selectByExample(example);
+        return new PageResult(page.getTotal(),page.getResult());
     }
 
 
