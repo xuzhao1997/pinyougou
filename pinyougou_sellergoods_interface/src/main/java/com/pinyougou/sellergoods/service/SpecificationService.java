@@ -22,4 +22,7 @@ public interface SpecificationService {
 
     //修改规格
     void update(Specification specification);
+
+    //删除规格
+    void delete(Long[] ids);
 }
