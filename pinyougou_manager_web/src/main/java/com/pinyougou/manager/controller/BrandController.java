@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName: BrandController
@@ -111,6 +112,15 @@ public class BrandController {
     @RequestMapping("/search")
     public PageResult search (@RequestBody TbBrand brand, Integer pageNum, Integer pageSize){
         return brandService.search(brand,pageNum,pageSize);
+    }
+    /**
+     * @Description: 查询模板关联的品牌列表
+     * @Author:      XuZhao
+     * @CreateDate:  19/03/14 下午 07:41
+     */
+    @RequestMapping("/selectBrandOptions")
+    public List<Map> selectBrandOptions(){
+        return brandService.selectBrandOptions();
     }
 
 }

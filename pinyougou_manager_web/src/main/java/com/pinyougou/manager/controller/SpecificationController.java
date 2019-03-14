@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * @ClassName: SpecificationController
  * @Description: 产品规格控制层
@@ -91,5 +94,15 @@ public class SpecificationController {
             e.printStackTrace();
             return new Result(true,"删除失败!!!");
         }
+    }
+
+    /**
+    * @Description: 模板关联规格列表查询
+    * @Author:      XuZhao
+    * @CreateDate:  19/03/14 下午 08:33
+    */
+    @RequestMapping("/selectSpecOptions")
+    public List<Map> selectBrandOptions(){
+        return specificationService.selectSpecOptions();
     }
 }
