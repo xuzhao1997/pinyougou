@@ -29,5 +29,9 @@ app.service("brandService",function ($http) {
     this.dele=function (ids) {
         return $http.get("../brand/delete.do?ids="+ids);
     }
+    //查询模板关联的品牌列表
+    this.selectBrandOptions=function () {
+        return $http.get("../brand/selectBrandOptions.do");
+    }
 
 })

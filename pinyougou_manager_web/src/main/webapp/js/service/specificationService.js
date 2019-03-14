@@ -28,5 +28,9 @@ app.service("specificationService",function ($http) {
     this.dele=function (ids) {
         return $http.get("../specification/delete.do?ids="+ids);
     }
+    //查询模板关联的规格列表
+    this.selectSpecOptions=function () {
+        return $http.get("../specification/selectSpecOptions.do");
+    }
 
 })
