@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName: 类名
@@ -116,6 +117,16 @@ public class BrandServiceImpl implements BrandService {
         }
         Page<TbBrand> page = (Page<TbBrand>) brandMapper.selectByExample(example);
         return new PageResult(page.getTotal(),page.getResult());
+    }
+
+    /**
+    * @Description: 查询模板关联的品牌列表
+    * @Author:      XuZhao
+    * @CreateDate:  19/03/14 下午 07:45
+    */
+    @Override
+    public List<Map> selectBrandOptions() {
+        return brandMapper.selectBrandOptions();
     }
 
 
