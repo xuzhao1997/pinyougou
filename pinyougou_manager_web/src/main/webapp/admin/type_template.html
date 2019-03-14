@@ -36,7 +36,7 @@
 
 </head>
 
-<body class="hold-transition skin-red sidebar-mini" ng-app="pinyougou" ng-controller="typeTemplateController">
+<body class="hold-transition skin-red sidebar-mini" ng-app="pinyougou" ng-controller="typeTemplateController" ng-init="selectBrandOptions();selectSpecOptions()">
   <!-- .box-body -->
                 
                     <div class="box-header with-border">
@@ -135,7 +135,7 @@
 		      	<tr>
 		      		<td>关联规格</td>
 		      		<td>
-	
+						<input select2 ng-model="c" select2-model="entity.specIds" config="specList" multiple placeholder="支持多选哦" class="form-control" type="text"/>
 		      		</td>
 		      	</tr>	
 		      	
