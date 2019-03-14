@@ -76,5 +76,20 @@ public class SpecificationController {
             return new Result(true,"修改失败!!");
         }
     }
+    /**
+    * @Description: 删除规格
+    * @Author:      XuZhao
+    * @CreateDate:  19/03/14 下午 04:16
+    */
 
+    @RequestMapping("/delete")
+    public Result delete(Long[] ids){
+        try {
+            specificationService.delete(ids);
+            return new Result(true,"删除成功!!!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(true,"删除失败!!!");
+        }
+    }
 }
