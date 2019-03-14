@@ -1,5 +1,5 @@
  //控制层 
-app.controller('typeTemplateController' ,function($scope,$controller   ,typeTemplateService){	
+app.controller('typeTemplateController' ,function($scope,$controller   ,typeTemplateService,brandService,specificationService){
 	
 	$controller('baseController',{$scope:$scope});//继承
 	
@@ -77,6 +77,22 @@ app.controller('typeTemplateController' ,function($scope,$controller   ,typeTemp
 	}
     //模板关联的品牌列表数据
     $scope.brandList = {
-        data: [{id:1,text:'联想'},{id:2,text:'三星'}]
+        data: []
     };
+    //关联品牌列表方法
+    $scope.selectBrandOptions=function () {
+        brandService.selectBrandOptions().success(function (response) {
+            $scope.brandList.data=response;
+        })
+    }
+    //模板关联的规格数据
+	$scope.specList = {
+    	data:[]
+	};
+	//关联规格方法
+    $scope.selectSpecOptions=function () {
+        specificationService.selectSpecOptions().success(function (response) {
+            $scope.specList.data=response;
+        })
+    }
 });	
