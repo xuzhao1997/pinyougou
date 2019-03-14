@@ -4,6 +4,9 @@ import com.pinyougou.pojo.TbSpecification;
 import entity.PageResult;
 import groupEntity.Specification;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * @ClassName: SpecificationService
  * @Description: 商品规格接口
@@ -25,4 +28,7 @@ public interface SpecificationService {
 
     //删除规格
     void delete(Long[] ids);
+
+    //模板关联规格数据
+    List<Map> selectSpecOptions();
 }

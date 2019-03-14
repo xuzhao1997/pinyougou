@@ -4,6 +4,7 @@ import com.pinyougou.pojo.TbBrand;
 import entity.PageResult;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName: BrandService
@@ -32,4 +33,7 @@ public interface BrandService {
 
     //品牌分页查询
     PageResult search(TbBrand brand, Integer pageNum, Integer pageSize);
+
+    //查询模板关联的品牌列表
+    List<Map> selectBrandOptions();
 }
