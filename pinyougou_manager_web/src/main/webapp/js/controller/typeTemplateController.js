@@ -75,5 +75,8 @@ app.controller('typeTemplateController' ,function($scope,$controller   ,typeTemp
 			}			
 		);
 	}
-    
+    //模板关联的品牌列表数据
+    $scope.brandList = {
+        data: [{id:1,text:'联想'},{id:2,text:'三星'}]
+    };
 });	
