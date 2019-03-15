@@ -57,5 +57,11 @@ public interface ItemCatService {
 	 * @return
 	 */
 	public PageResult findPage(TbItemCat itemCat, int pageNum, int pageSize);
-	
+
+	/**
+	* @Description: 查询下级分类
+	* @Author:      XuZhao
+	* @CreateDate:  19/03/15 下午 01:50
+	*/
+    List<TbItemCat> findByParentId(Long parentId);
 }
