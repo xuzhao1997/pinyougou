@@ -35,5 +35,19 @@ app.controller("baseController",function ($scope) {
         }
     }
 
+    //从json格式数组字符串中获取数字中的每个对象的value值,做字符串拼接
+    $scope.getStringByValue=function (jsonString,key) {
+        //解析json字符串
+        var jsonArr = JSON.parse(jsonString);
+        var value = "";
+        for(var i = 0;i < jsonArr.length;i++){
+            if(i > 0){
+                value += "," + jsonArr[i][key];
+            }else{
+                value += jsonArr[i][key];
+            }
+        }
+        return value;
+    }
 
 });
