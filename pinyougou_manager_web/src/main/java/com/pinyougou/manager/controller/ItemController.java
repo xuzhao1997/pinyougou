@@ -1,6 +1,8 @@
 package com.pinyougou.manager.controller;
 import java.util.List;
 
+import com.pinyougou.pojo.TbItemCat;
+import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -110,5 +112,6 @@ public class ItemController {
 	public PageResult search(@RequestBody TbItem item, int page, int rows  ){
 		return itemService.findPage(item, page, rows);		
 	}
-	
+
+
 }
