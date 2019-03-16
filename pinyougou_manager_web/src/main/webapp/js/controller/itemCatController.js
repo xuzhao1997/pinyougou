@@ -1,5 +1,5 @@
  //控制层 
-app.controller('itemCatController' ,function($scope,$controller   ,itemCatService){	
+app.controller('itemCatController' ,function($scope,$controller   ,itemCatService,typeTemplateService){
 	
 	$controller('baseController',{$scope:$scope});//继承
 	
@@ -37,13 +37,16 @@ app.controller('itemCatController' ,function($scope,$controller   ,itemCatServic
 		if($scope.entity.id!=null){//如果有ID
 			serviceObject=itemCatService.update( $scope.entity ); //修改  
 		}else{
+			//指定新增分类的父id
+			$scope.entity.parentId=$scope.parentId;
 			serviceObject=itemCatService.add( $scope.entity  );//增加 
 		}				
 		serviceObject.success(
 			function(response){
 				if(response.success){
 					//重新查询 
-		        	$scope.reloadList();//重新加载
+		        	/*$scope.reloadList();//重新加载*/
+					$scope.findByParentId($scope.parentId);
 				}else{
 					alert(response.message);
 				}
@@ -58,7 +61,7 @@ app.controller('itemCatController' ,function($scope,$controller   ,itemCatServic
 		itemCatService.dele( $scope.selectIds ).success(
 			function(response){
 				if(response.success){
-					$scope.reloadList();//刷新列表
+                    $scope.findByParentId($scope.parentId);
 				}						
 			}		
 		);				
@@ -75,14 +78,50 @@ app.controller('itemCatController' ,function($scope,$controller   ,itemCatServic
 			}			
 		);
 	}
+	//定义当前级别的父id
+	$scope.parentId=0;
+
 	//查询下级分类
 	$scope.findByParentId=function (parentId) {
+        $scope.parentId=parentId;
         itemCatService.findByParentId(parentId).success(
         	function (response) {
 				$scope.list = response;
         })
     }
 
+    //设置页面展示的分类级别
+	$scope.grade=1;//初始化查询一级分类的列表数据
+	$scope.setGrade=function (grade) {
+		$scope.grade=grade;
+    }
 
+    //面包屑导航栏效果实现
+	$scope.selectItemCatList=function (entity_p) {
+		//一级分类
+		if($scope.grade==1){
+			$scope.entity_1=null;
+            $scope.entity_2=null;
+		}
+		//二级分类
+        if($scope.grade==2){
+            $scope.entity_1=entity_p;
+            $scope.entity_2=null;
+        }
+        //三级分类
+        if($scope.grade==3){
+            $scope.entity_2=entity_p;
+        }
+        //查询当前分类的子分类
+		$scope.findByParentId(entity_p.id);
+
+    }
+
+    //查询分类关联的模板
+	$scope.selectTypeTemplateList=function () {
+		typeTemplateService.findAll().success(function (response) {
+			$scope.typeTemplateList=response;
+        })
+    }
 
 });	
