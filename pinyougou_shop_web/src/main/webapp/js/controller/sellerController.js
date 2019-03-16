@@ -28,18 +28,20 @@ app.controller('sellerController',
 				});
 			}
 
-			// 保存
-			$scope.save = function() {
-				//商家注册
-				sellerService.add($scope.entity).success(function(response) {
-					if (response.success) {
-						// 跳转到商品登录页面
-						location.href = "shoplogin.html";
-					} else {
-						alert(response.message);
-					}
-				});
-			}
+            //商家入驻
+            $scope.regist=function(){
+                sellerService.add( $scope.entity ).success(
+                    function(response){
+                        if(response.success){
+                            //申请成功后，跳转登录页面
+                            location.href="shoplogin.html";
+
+                        }else{
+                            alert(response.message);
+                        }
+                    }
+                );
+            }
 
 			// 批量删除
 			$scope.dele = function() {
