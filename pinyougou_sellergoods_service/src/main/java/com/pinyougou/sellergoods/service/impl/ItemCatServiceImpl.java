@@ -74,6 +74,14 @@ public class ItemCatServiceImpl implements ItemCatService {
 	@Override
 	public void delete(Long[] ids) {
 		for(Long id:ids){
+			//查询当前的分类下是否还有子类
+			TbItemCatExample example  = new TbItemCatExample();
+            Criteria criteria = example.createCriteria();
+            criteria.andParentIdEqualTo(id);
+            List<TbItemCat> tbItemCats = itemCatMapper.selectByExample(example);
+			if(tbItemCats != null && tbItemCats.size() > 0){
+				throw new RuntimeException("有子分类，不允许直接删除");
+			}
 			itemCatMapper.deleteByPrimaryKey(id);
 		}		
 	}
