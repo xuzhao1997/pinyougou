@@ -114,7 +114,8 @@ public class SellerServiceImpl implements SellerService {
 				criteria.andTelephoneLike("%"+seller.getTelephone()+"%");
 			}
 			if(seller.getStatus()!=null && seller.getStatus().length()>0){
-				criteria.andStatusLike("%"+seller.getStatus()+"%");
+				/*criteria.andStatusLike("%"+seller.getStatus()+"%");*/
+				criteria.andStatusEqualTo(seller.getStatus());
 			}
 			if(seller.getAddressDetail()!=null && seller.getAddressDetail().length()>0){
 				criteria.andAddressDetailLike("%"+seller.getAddressDetail()+"%");
@@ -164,5 +165,18 @@ public class SellerServiceImpl implements SellerService {
 		Page<TbSeller> page= (Page<TbSeller>)sellerMapper.selectByExample(example);		
 		return new PageResult(page.getTotal(), page.getResult());
 	}
-	
+
+	/**
+	* @Description: 商家审核
+	* @Author:      XuZhao
+	* @CreateDate:  19/03/17 下午 03:41
+	*/
+	@Override
+	public void updateStatus(String sellerId, String status) {
+
+        TbSeller tbSeller = sellerMapper.selectByPrimaryKey(sellerId);
+        tbSeller.setStatus(status);
+        sellerMapper.updateByPrimaryKey(tbSeller);
+    }
+
 }
