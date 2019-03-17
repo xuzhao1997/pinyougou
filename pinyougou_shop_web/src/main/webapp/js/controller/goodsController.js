@@ -1,5 +1,5 @@
  //控制层 
-app.controller('goodsController' ,function($scope,$controller   ,goodsService){	
+app.controller('goodsController' ,function($scope,$controller   ,goodsService,itemCatService){
 	
 	$controller('baseController',{$scope:$scope});//继承
 	
@@ -8,9 +8,9 @@ app.controller('goodsController' ,function($scope,$controller   ,goodsService){
 		goodsService.findAll().success(
 			function(response){
 				$scope.list=response;
-			}			
+			}
 		);
-	}    
+	}
 	
 	//分页
 	$scope.findPage=function(page,rows){			
@@ -76,5 +76,31 @@ app.controller('goodsController' ,function($scope,$controller   ,goodsService){
 			}			
 		);
 	}
-    
+
+	//查询一级分类列表数据
+	$scope.selectItemCatList1=function () {
+		itemCatService.findByParentId(0).success(function (response) {
+			$scope.itemCatList1=response;
+        })
+    }
+
+    //基于一级分类的改变,联动查询二级分类列表数据
+	$scope.$watch("entity.goods.category1Id",function (newValue,oldValue) {
+		itemCatService.findByParentId(newValue).success(function (response) {
+			$scope.itemCatList2=response;
+        })
+	});
+	//基于二级分类的改变,联动查询三级分类列表数据
+    $scope.$watch("entity.goods.category2Id",function (newValue,oldValue) {
+        itemCatService.findByParentId(newValue).success(function (response) {
+            $scope.itemCatList3=response;
+        })
+    });
+
+    //基于三级分类的改变,查询模板数据
+    $scope.$watch("entity.goods.category3Id",function (newValue,oldValue) {
+        itemCatService.findOne(newValue).success(function (response) {
+            $scope.entity.goods.typeTemplateId=response.typeId;
+        })
+    });
 });	
