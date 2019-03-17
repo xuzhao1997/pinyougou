@@ -101,7 +101,7 @@ public class SellerController {
 	
 		/**
 	 * 查询+分页
-	 * @param brand
+	 * @param
 	 * @param page
 	 * @param rows
 	 * @return
@@ -110,5 +110,23 @@ public class SellerController {
 	public PageResult search(@RequestBody TbSeller seller, int page, int rows  ){
 		return sellerService.findPage(seller, page, rows);		
 	}
-	
+
+	/**
+	* @Description: 商家审核
+	* @Author:      XuZhao
+	* @CreateDate:  19/03/17 下午 03:37
+	*/
+	@RequestMapping("/updateStatus")
+	public Result updateStatus(String sellerId,String status){
+
+		try {
+			sellerService.updateStatus(sellerId,status);
+				return new Result(true,"审核完成!!");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new Result(true,"审核失败!!");
+		}
+	}
+
+
 }
