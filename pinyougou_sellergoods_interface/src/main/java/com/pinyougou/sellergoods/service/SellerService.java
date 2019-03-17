@@ -57,5 +57,11 @@ public interface SellerService {
 	 * @return
 	 */
 	public PageResult findPage(TbSeller seller, int pageNum, int pageSize);
-	
+
+	/**
+	* @Description: 商家审核
+	* @Author:      XuZhao
+	* @CreateDate:  19/03/17 下午 03:41
+	*/
+    void updateStatus(String sellerId, String status);
 }
