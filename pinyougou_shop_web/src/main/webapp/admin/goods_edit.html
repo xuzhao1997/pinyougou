@@ -172,17 +172,11 @@
                            
                             <!--扩展属性-->
                             <div class="tab-pane" id="customAttribute">
-                                <div class="row data-type">                                
-	                                <div>
-		                                <div class="col-md-2 title">扩展属性1</div>
+                                <div class="row data-type">
+									<div ng-repeat="attr in entity.goodsDesc.customAttributeItems">
+		                                <div class="col-md-2 title">{{attr.text}}</div>
 				                        <div class="col-md-10 data">
-				                              <input class="form-control" placeholder="扩展属性1">	            	 
-				                        </div>
-	                                </div>       
-									<div>
-		                                <div class="col-md-2 title">扩展属性2</div>
-				                        <div class="col-md-10 data">
-				                              <input class="form-control" placeholder="扩展属性2">	            	 
+				                              <input class="form-control" ng-model="attr.value" placeholder="{{attr.text}}">
 				                        </div>
 	                                </div>  									
                                 </div>
