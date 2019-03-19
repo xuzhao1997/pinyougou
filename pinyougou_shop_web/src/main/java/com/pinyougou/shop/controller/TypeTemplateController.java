@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * controller
@@ -102,7 +103,7 @@ public class TypeTemplateController {
 	
 		/**
 	 * 查询+分页
-	 * @param brand
+	 * @param
 	 * @param page
 	 * @param rows
 	 * @return
@@ -111,5 +112,15 @@ public class TypeTemplateController {
 	public PageResult search(@RequestBody TbTypeTemplate typeTemplate, int page, int rows  ){
 		return typeTemplateService.findPage(typeTemplate, page, rows);		
 	}
+	/**
+	* @Description: 基于模板查询商品录入关联的规格列表数据
+	* @Author:      XuZhao
+	* @CreateDate:  19/03/19 下午 09:10
+	*/
+	@RequestMapping("/selectSpecList")
+	public List<Map> selectSpecList(Long typeTemplateId){
+		return typeTemplateService.SelectSpecList(typeTemplateId);
+	}
+
 
 }
