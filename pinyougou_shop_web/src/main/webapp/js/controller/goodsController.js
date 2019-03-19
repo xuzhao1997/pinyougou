@@ -1,5 +1,5 @@
  //控制层 
-app.controller('goodsController' ,function($scope,$controller   ,goodsService,itemCatService,typeTemplateService){
+app.controller('goodsController' ,function($scope,$controller   ,goodsService,itemCatService,typeTemplateService,uploadService){
 	
 	$controller('baseController',{$scope:$scope});//继承
 	
@@ -119,5 +119,29 @@ app.controller('goodsController' ,function($scope,$controller   ,goodsService,it
 
 
 
+    //初始化图片对象
+	$scope.imageEntity={};
+
+	//文件上传
+	$scope.uploadFile=function () {
+		uploadService.uploadFile().success(function (response) {
+			if(response.success){
+				//上传成功,图片回显
+				$scope.imageEntity.url=response.message;
+			}else{
+				alert(response.message);
+			}
+        })
+    }
+    //初始化entity对象
+    $scope.entity={goods:{},goodsDesc:{itemImages:[]},itemList:[]};
+	//完成图片保存功能
+	$scope.saveImage=function () {
+        $scope.entity.goodsDesc.itemImages.push($scope.imageEntity);
+    }
+	//删除图片
+    $scope.deleImages=function (index) {
+        $scope.entity.goodsDesc.itemImages.splice(index,1);
+    }
 
 });	
