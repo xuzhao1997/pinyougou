@@ -116,7 +116,11 @@ app.controller('goodsController' ,function($scope,$controller   ,goodsService,it
 			$scope.brandList=JSON.parse(response.brandIds);
 			//展示扩展属性
 			$scope.entity.goodsDesc.customAttributeItems=JSON.parse(response.customAttributeItems);
+        });
+        typeTemplateService.selectSpecList(newValue).success(function (response) {
+			$scope.specList=response;
         })
+
     });
 
 
