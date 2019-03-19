@@ -37,6 +37,8 @@ app.controller('goodsController' ,function($scope,$controller   ,goodsService,it
 		if($scope.entity.goods.id!=null){//如果有ID
 			serviceObject=goodsService.update( $scope.entity ); //修改  
 		}else{
+			//绑定编辑器中输入的商品介绍的hml片段
+			$scope.entity.goodsDesc.introduction = editor.html();
 			serviceObject=goodsService.add( $scope.entity  );//增加 
 		}				
 		serviceObject.success(
@@ -45,6 +47,8 @@ app.controller('goodsController' ,function($scope,$controller   ,goodsService,it
 					//重新查询 
 		        	/*$scope.reloadList();//重新加载*/
 					$scope.entity={};//临时清空添加页面
+					//清空文本编辑器的内容
+					editor.html("");
 				}else{
 					alert(response.message);
 				}
