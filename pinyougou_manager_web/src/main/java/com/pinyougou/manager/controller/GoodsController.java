@@ -95,5 +95,23 @@ public class GoodsController {
 	public PageResult search(@RequestBody TbGoods goods, int page, int rows  ){
 		return goodsService.findPage(goods, page, rows);		
 	}
-	
+
+	/**
+	* @Description: 商品审核
+	* @Author:      XuZhao
+	* @CreateDate:  19/03/20 下午 09:20
+	*/
+	@RequestMapping("/updateStatus")
+	public Result updateStatus(Long[] ids,String status){
+        try {
+            goodsService.updateStatus(ids,status);
+            return new Result(true,"审核成功!!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(true,"审核失败!!");
+        }
+    }
+
+
+
 }
