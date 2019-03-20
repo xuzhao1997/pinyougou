@@ -229,5 +229,20 @@ public class GoodsServiceImpl implements GoodsService {
 		Page<TbGoods> page= (Page<TbGoods>)goodsMapper.selectByExample(example);		
 		return new PageResult(page.getTotal(), page.getResult());
 	}
-	
+
+	/**
+	* @Description: 商品审核
+	* @Author:      XuZhao
+	* @CreateDate:  19/03/20 下午 09:22
+	*/
+    @Override
+    public void updateStatus(Long[] ids, String status) {
+        //商品审核
+        for(Long id : ids){
+            TbGoods tbGoods = goodsMapper.selectByPrimaryKey(id);
+            tbGoods.setAuditStatus(status);
+            goodsMapper.updateByPrimaryKey(tbGoods);
+        }
+    }
+
 }
