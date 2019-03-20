@@ -208,6 +208,20 @@ app.controller('goodsController' ,function($scope,$controller   ,goodsService,it
 
 		//商品审核状态数组
 	$scope.status=['未审核','已审核','审核未通过','关闭'];
+	//商品上下架状态数组
+    $scope.isMarketable=['下架','上架'];
 
+    //商品上下架
+    $scope.updateIsMarketable=function (isMarketable) {
+        //获取选中的复选框
+        goodsService.updateIsMarketable($scope.selectIds,isMarketable).success(function (response) {
+            if(response.success){
+                $scope.reloadList();//刷新列表
+                $scope.selectIds=[];//清空记录审核状态id的数组内容
+            }else{
+                alert(response.message);
+            }
+        })
+    }
 
 });	
