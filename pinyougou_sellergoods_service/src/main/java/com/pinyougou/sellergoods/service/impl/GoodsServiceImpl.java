@@ -205,7 +205,8 @@ public class GoodsServiceImpl implements GoodsService {
 				criteria.andGoodsNameLike("%"+goods.getGoodsName()+"%");
 			}
 			if(goods.getAuditStatus()!=null && goods.getAuditStatus().length()>0){
-				criteria.andAuditStatusLike("%"+goods.getAuditStatus()+"%");
+				/*criteria.andAuditStatusLike("%"+goods.getAuditStatus()+"%");*/
+                criteria.andAuditStatusEqualTo(goods.getAuditStatus());
 			}
 			if(goods.getIsMarketable()!=null && goods.getIsMarketable().length()>0){
 				criteria.andIsMarketableLike("%"+goods.getIsMarketable()+"%");
