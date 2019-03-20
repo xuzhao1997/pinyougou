@@ -120,5 +120,23 @@ public class GoodsController {
 		goods.setSellerId(sellerId);
 		return goodsService.findPage(goods, page, rows);
 	}
+	/**
+	 * @Description: 商品上下架
+	 * @Author:      XuZhao
+	 * @CreateDate:  19/03/20 下午 09:42
+	 */
+	@RequestMapping("/updateIsMarketable")
+	public Result updateIsMarketable(Long[] ids,String isMarketable){
+		try {
+			goodsService.updateIsMarketable(ids,isMarketable);
+			return new Result(true,"上架或下架完成");
+		} catch (RuntimeException e){
+			return new Result(false,e.getMessage());
+		}catch (Exception e) {
+			e.printStackTrace();
+			return new Result(false,"上架或下架失败!!!");
+		}
+	}
+
 	
 }
