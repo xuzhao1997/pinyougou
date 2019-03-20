@@ -75,5 +75,8 @@ app.controller('goodsController' ,function($scope,$controller   ,goodsService){
 			}			
 		);
 	}
+
+    //商品审核状态数组
+    $scope.status=['未审核','已审核','审核未通过','关闭'];
     
 });	
