@@ -52,4 +52,15 @@ app.controller("baseController",function($scope){
 		return value;
 	};
 
+	//判断一个数组对象中,基于数组对象的属性值,判断该对象是否存在,如果存在,则返回该对象
+    $scope.getObjectByValue=function (list,key,value) {
+        for(var i=0;i<list.length;i++){
+            if( list[i][key]==value){
+                return list[i];
+            }
+        }
+        return null;
+    }
+
+
 });
