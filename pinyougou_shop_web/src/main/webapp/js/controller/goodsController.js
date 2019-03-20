@@ -1,6 +1,6 @@
  //控制层 
 app.controller('goodsController' ,function($scope,$controller   ,goodsService,itemCatService,typeTemplateService,uploadService){
-	
+
 	$controller('baseController',{$scope:$scope});//继承
 	
     //读取列表数据绑定到表单中  
@@ -140,7 +140,7 @@ app.controller('goodsController' ,function($scope,$controller   ,goodsService,it
         })
     }
     //初始化entity对象
-    $scope.entity={goods:{},goodsDesc:{itemImages:[]},itemList:[]};
+    $scope.entity={goods:{},goodsDesc:{itemImages:[],specificationItems:[]},itemList:[]};
 	//完成图片保存功能
 	$scope.saveImage=function () {
         $scope.entity.goodsDesc.itemImages.push($scope.imageEntity);
@@ -148,6 +148,62 @@ app.controller('goodsController' ,function($scope,$controller   ,goodsService,it
 	//删除图片
     $scope.deleImages=function (index) {
         $scope.entity.goodsDesc.itemImages.splice(index,1);
+    }
+
+    //规格选项勾选和取消勾选
+	$scope.updateSpecAttribute=function ($event,specName,specOption) {
+		//判断规格名称对应的规格对象是否存在勾选的规格列表中,如果存在,就返回该对象
+        var specObject = $scope.getObjectByValue($scope.entity.goodsDesc.specificationItems,"attributeName",specName);
+			if(specObject!=null){//如果存在
+				if($event.target.checked){//勾选
+					//在已有的规格对象中规格选项列表中,添加勾选的选项列表数据
+                    specObject.attributeValue.push(specOption);
+				}else{//取消勾选
+					//在已有的规格对象中规格选项列表中,移除取消勾选的选项列表数据
+                    specObject.attributeValue.splice(specObject.attributeValue.indexOf(specOption),1);
+					//如果规格对象中规格选项列表中规格数据全部移除
+					if(specObject.attributeValue.length == 0){
+						//从勾选的规格列表中,移除该规格对象
+						var index = $scope.entity.goodsDesc.specificationItems.indexOf(specObject);
+                        $scope.entity.goodsDesc.specificationItems.splice(index,1);
+					}
+				}
+			}else{//如果不存在,新增规格对象到勾选的规格列表中
+				$scope.entity.goodsDesc.specificationItems.push({"attributeName":specName,"attributeValue":[specOption]});
+			}
+    }
+
+    //构建组装item列表
+	$scope.createItemList=function () {
+		//初始化itemList列表
+		$scope.entity.itemList=[{spec:{},price:0.00,num:999,status:"1",isDefault:"0"}];
+		//勾选的规格结果集数组
+		var checkSpecList = $scope.entity.goodsDesc.specificationItems;
+		//全部取消勾选的规格结果集
+		if(checkSpecList.length==0){
+            $scope.entity.itemList=[];
+		}
+		//获取勾选的规格名称和规格选项列表
+		for(var i = 0;i< checkSpecList.length;i++){
+			//抽取方法,动态的组装itemList中对象的spec属性赋值过程
+			$scope.entity.itemList = addColumn($scope.entity.itemList,checkSpecList[i].attributeName,checkSpecList[i].attributeValue);
+
+		}
+    }
+	//动态的组装itemList中对象的spec属性赋值
+    addColumn=function (list,specName,specOptions) {
+		var newList=[];
+		for(var i = 0;i<list.length;i++){
+			var oldItem = list[i];
+			//循环遍历规格选项列表,获取规格选项值
+			for(var j = 0;j<specOptions.length;j++){
+				//基于深克隆,构建新的item对象
+				var newItem = JSON.parse(JSON.stringify(oldItem));
+				newItem.spec[specName]=specOptions[j];
+				newList.push(newItem);
+			}
+		}
+		return newList;
     }
 
 });	
