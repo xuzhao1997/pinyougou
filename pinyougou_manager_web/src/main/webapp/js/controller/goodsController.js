@@ -79,4 +79,17 @@ app.controller('goodsController' ,function($scope,$controller   ,goodsService){
     //商品审核状态数组
     $scope.status=['未审核','已审核','审核未通过','关闭'];
     
+	//商品审核
+	$scope.updateStatus=function (status) {
+		//获取选中的复选框
+		goodsService.updateStatus($scope.selectIds,status).success(function (response) {
+			if(response.success){
+                $scope.reloadList();//刷新列表
+                $scope.selectIds=[];//清空记录审核状态id的数组内容
+			}else{
+                alert(response.message);
+			}
+        })
+    }
+	
 });	
