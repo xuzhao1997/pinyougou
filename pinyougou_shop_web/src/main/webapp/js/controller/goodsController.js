@@ -140,7 +140,7 @@ app.controller('goodsController' ,function($scope,$controller   ,goodsService,it
         })
     }
     //初始化entity对象
-    $scope.entity={goods:{},goodsDesc:{itemImages:[],specificationItems:[]},itemList:[]};
+    $scope.entity={goods:{isEnableSpec:'1'},goodsDesc:{itemImages:[],specificationItems:[]},itemList:[]};
 	//完成图片保存功能
 	$scope.saveImage=function () {
         $scope.entity.goodsDesc.itemImages.push($scope.imageEntity);
