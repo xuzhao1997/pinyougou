@@ -66,4 +66,11 @@ public interface GoodsService {
 	* @CreateDate:  19/03/20 下午 09:22
 	*/
     void updateStatus(Long[] ids, String status);
+
+    /**
+    * @Description: 商品上下架
+    * @Author:      XuZhao
+    * @CreateDate:  19/03/20 下午 09:46
+    */
+	void updateIsMarketable(Long[] ids, String isMarketable);
 }
