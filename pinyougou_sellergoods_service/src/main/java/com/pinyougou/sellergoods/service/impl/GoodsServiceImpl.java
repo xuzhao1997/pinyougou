@@ -245,4 +245,25 @@ public class GoodsServiceImpl implements GoodsService {
         }
     }
 
+    /**
+    * @Description: 商品上下架
+    * @Author:      XuZhao
+    * @CreateDate:  19/03/20 下午 09:46
+    */
+    @Override
+    public void updateIsMarketable(Long[] ids, String isMarketable) {
+        for(Long id : ids){
+            //判断只有审核通过的商品才能上架
+            TbGoods tbGoods = goodsMapper.selectByPrimaryKey(id);
+            if(tbGoods.getAuditStatus().equals("1")){
+                tbGoods.setIsMarketable(isMarketable);
+                goodsMapper.updateByPrimaryKey(tbGoods);
+            }else{
+                throw new RuntimeException("只有审核通过的商品才能上架");
+            }
+
+        }
+
+    }
+
 }
