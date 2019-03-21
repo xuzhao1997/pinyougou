@@ -183,9 +183,13 @@ public class GoodsServiceImpl implements GoodsService {
 	 */
 	@Override
 	public void delete(Long[] ids) {
+		//删除只是修改状态让运营商看不到
 		for(Long id:ids){
-			goodsMapper.deleteByPrimaryKey(id);
-		}		
+			/*goodsMapper.deleteByPrimaryKey(id);*/
+			TbGoods goods = goodsMapper.selectByPrimaryKey(id);
+			goods.setIsDelete("1");
+			goodsMapper.updateByPrimaryKey(goods);
+		}
 	}
 	
 	
@@ -195,7 +199,7 @@ public class GoodsServiceImpl implements GoodsService {
 		
 		TbGoodsExample example=new TbGoodsExample();
 		Criteria criteria = example.createCriteria();
-		
+		criteria.andIsDeleteIsNull();//非删除状态，让查询的商品都是没删除的
 		if(goods!=null){			
 						if(goods.getSellerId()!=null && goods.getSellerId().length()>0){
 				/*criteria.andSellerIdLike("%"+goods.getSellerId()+"%");*/
@@ -222,6 +226,7 @@ public class GoodsServiceImpl implements GoodsService {
 			}
 			if(goods.getIsDelete()!=null && goods.getIsDelete().length()>0){
 				criteria.andIsDeleteLike("%"+goods.getIsDelete()+"%");
+
 			}
 	
 		}
