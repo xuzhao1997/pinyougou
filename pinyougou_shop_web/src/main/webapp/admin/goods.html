@@ -33,7 +33,7 @@
 
 </head>
 
-<body class="hold-transition skin-red sidebar-mini" ng-app="pinyougou" ng-controller="goodsController">
+<body class="hold-transition skin-red sidebar-mini" ng-app="pinyougou" ng-controller="goodsController" ng-init="findItemCatList()">
   <!-- .box-body -->
                 
                     <div class="box-header with-border">
@@ -61,15 +61,15 @@
                             </div>
                             <div class="box-tools pull-right">
                                 <div class="has-feedback">
-                                  状态：<select>
+                                  状态：<select ng-model="searchEntity.auditStatus">
                                          	<option value="">全部</option>      
                                          	<option value="0">未申请</option>    
                                          	<option value="1">申请中</option>    
                                          	<option value="2">审核通过</option>    
                                          	<option value="3">已驳回</option>                                     
                                         </select>
-							                  商品名称：<input >									
-									<button class="btn btn-default" >查询</button>                                    
+							                  商品名称：<input ng-model="searchEntity.goodsName">
+									<button ng-click="reloadList()" class="btn btn-default" >查询</button>
                                 </div>
                             </div>
                             <!--工具栏/-->
@@ -98,9 +98,9 @@
 				                          <td>{{pojo.id}}</td>
 									      <td>{{pojo.goodsName}}</td>
 									      <td>{{pojo.price}}</td>
-									      <td>{{pojo.category1Id}}</td>
-										  <td>{{pojo.category2Id}}</td>
-										  <td>{{pojo.category3Id}}</td>
+									      <td>{{itemCatList[pojo.category1Id]}}</td>
+										  <td>{{itemCatList[pojo.category2Id]}}</td>
+										  <td>{{itemCatList[pojo.category3Id]}}</td>
 		                                  <td>
 		                                  	<span>
 		                                  		{{status[pojo.auditStatus]}}
