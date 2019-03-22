@@ -95,6 +95,4 @@ app.controller('contentController' ,function($scope,$controller   ,contentServic
         })
     }
 
-
-
 });	
