@@ -121,6 +121,7 @@ public class ContentServiceImpl implements ContentService {
 		Criteria criteria = example.createCriteria();
 		criteria.andCategoryIdEqualTo(categoryId);
 		criteria.andStatusEqualTo("1");
+		example.setOrderByClause("sortOrder");
 		return contentMapper.selectByExample(example);
 
 	}
