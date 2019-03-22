@@ -57,5 +57,11 @@ public interface ContentService {
 	 * @return
 	 */
 	public PageResult findPage(TbContent content, int pageNum, int pageSize);
-	
+
+	/**
+	* @Description: 根据广告分类,查询相关广告列表数据
+	* @Author:      XuZhao
+	* @CreateDate:  19/03/22 下午 09:03
+	*/
+    List<TbContent> findByCategoryId(Long categoryId);
 }
