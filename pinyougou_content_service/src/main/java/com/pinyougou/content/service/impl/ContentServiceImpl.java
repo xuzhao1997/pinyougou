@@ -12,6 +12,7 @@ import com.pinyougou.pojo.TbContentExample;
 import com.pinyougou.pojo.TbContentExample.Criteria;
 
 import entity.PageResult;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -25,6 +26,9 @@ public class ContentServiceImpl implements ContentService {
 
 	@Autowired
 	private TbContentMapper contentMapper;
+
+	@Autowired
+	private RedisTemplate redisTemplate;
 	
 	/**
 	 * 查询全部
@@ -49,7 +53,10 @@ public class ContentServiceImpl implements ContentService {
 	 */
 	@Override
 	public void add(TbContent content) {
-		contentMapper.insert(content);		
+	    //当增加广告时,要清空缓存中的数据
+        Long categoryId = content.getCategoryId();
+        redisTemplate.boundHashOps("content").delete(categoryId);
+        contentMapper.insert(content);
 	}
 
 	
@@ -58,7 +65,17 @@ public class ContentServiceImpl implements ContentService {
 	 */
 	@Override
 	public void update(TbContent content){
-		contentMapper.updateByPrimaryKey(content);
+	    //修改广告时,不管有没有修改广告分类ID,需要清除修改前对应得广告列表数
+        Long oldCategoryId = contentMapper.selectByPrimaryKey(content.getId()).getCategoryId();
+        redisTemplate.boundHashOps("content").delete(oldCategoryId);
+        contentMapper.updateByPrimaryKey(content);
+
+        //判断广告分类ID是否发生改变
+        if(oldCategoryId.longValue()!= content.getCategoryId()){
+            //如果广告类型ID发生改变,需要清空改变后的广告类型列表数据
+            redisTemplate.boundHashOps("content").delete(content.getCategoryId());
+        }
+
 	}	
 	
 	/**
@@ -77,7 +94,10 @@ public class ContentServiceImpl implements ContentService {
 	@Override
 	public void delete(Long[] ids) {
 		for(Long id:ids){
-			contentMapper.deleteByPrimaryKey(id);
+		    //当删除广告时,要清空缓存中的数据
+            Long categoryId = contentMapper.selectByPrimaryKey(id).getCategoryId();
+            redisTemplate.boundHashOps("content").delete(categoryId);
+            contentMapper.deleteByPrimaryKey(id);
 		}		
 	}
 	
@@ -116,14 +136,26 @@ public class ContentServiceImpl implements ContentService {
 	*/
 	@Override
 	public List<TbContent> findByCategoryId(Long categoryId) {
-		//基于广告分类id查询有效状态广告数据
-		TbContentExample example = new TbContentExample();
-		Criteria criteria = example.createCriteria();
-		criteria.andCategoryIdEqualTo(categoryId);
-		criteria.andStatusEqualTo("1");
-		example.setOrderByClause("sortOrder");
-		return contentMapper.selectByExample(example);
 
+		//从redis中获取广告列表数据
+		List<TbContent> contentList = (List<TbContent>) redisTemplate.boundHashOps("content").get(categoryId);
+		//如果从redis中找不到,就查询数据库
+		if(contentList==null){
+            System.out.println("from mysql..........");
+			//基于广告分类id查询有效状态广告数据
+			TbContentExample example = new TbContentExample();
+			Criteria criteria = example.createCriteria();
+			criteria.andCategoryIdEqualTo(categoryId);
+			criteria.andStatusEqualTo("1");
+			example.setOrderByClause("sort_order");
+            contentList= contentMapper.selectByExample(example);
+            //把查询结果存到缓存中
+            redisTemplate.boundHashOps("content").put(categoryId,contentList);
+		}else{
+            System.out.println("from redis..........");
+        }
+
+		return contentList;
 	}
 
 }
