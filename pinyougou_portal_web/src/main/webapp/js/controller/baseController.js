@@ -35,19 +35,26 @@ app.controller("baseController",function ($scope) {
         }
     }
 
-    //从json格式数组字符串中获取数字中的每个对象的value值,做字符串拼接
+    //从json格式数组字符串中获取数组中每个对象的value值，做字符串拼接
     $scope.getStringByValue=function (jsonString,key) {
-        //解析json字符串
+        //1 解析json字符串  [{"id":27,"text":"网络"},{"id":32,"text":"机身内存"}]
         var jsonArr = JSON.parse(jsonString);
-        var value = "";
-        for(var i = 0;i < jsonArr.length;i++){
-            if(i > 0){
-                value += "," + jsonArr[i][key];
-            }else{
-                value += jsonArr[i][key];
+        var value="";
+        for(var i=0;i<jsonArr.length;i++){
+            //注意：json格式对象，基于属性名获取属性值有两种方式
+            //1 如果属性名是确定值，  获取属性值方式 对象.属性名  对象[属性名]
+            //2 如果属性名是变量，获取属性值方式 ：对象[属性名]
+
+            if(i>0){
+                value+=","+jsonArr[i][key];
+            }else {
+                value+=jsonArr[i][key];
             }
+
         }
+
         return value;
     }
+
 
 });
