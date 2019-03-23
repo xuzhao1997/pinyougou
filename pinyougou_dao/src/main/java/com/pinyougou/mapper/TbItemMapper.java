@@ -28,4 +28,7 @@ public interface TbItemMapper {
     int updateByPrimaryKeySelective(TbItem record);
 
     int updateByPrimaryKey(TbItem record);
+
+    //导入数据库满足条件的商品数据到索引库中
+    List<TbItem> findAllGrounding();
 }
