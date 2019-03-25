@@ -4,11 +4,9 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.pinyougou.pojo.TbItem;
 import com.pinyougou.search.service.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.solr.core.SolrTemplate;
-import org.springframework.data.solr.core.query.Criteria;
-import org.springframework.data.solr.core.query.HighlightOptions;
-import org.springframework.data.solr.core.query.HighlightQuery;
-import org.springframework.data.solr.core.query.SimpleHighlightQuery;
+import org.springframework.data.solr.core.query.*;
 import org.springframework.data.solr.core.query.result.HighlightEntry;
 import org.springframework.data.solr.core.query.result.HighlightPage;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,6 +52,72 @@ public class SearchServiceImpl implements SearchService {
         }
         //将关键字所搜条件赋予查询对象
         query.addCriteria(criteria);
+
+        //品牌过滤条件查询
+        String brand = (String) searchMap.get("brand");
+        if(brand!=null && !"".equals(brand)){
+            //设置品牌筛选条件
+            Criteria brandcriteria1 = new Criteria("item_brand").is(brand);
+            FilterQuery filterQuery = new SimpleFacetQuery(brandcriteria1);
+            //将过滤条件查询对象关联到主查询对象
+            query.addFilterQuery(filterQuery);
+        }
+        //分类过滤条件查询
+        String category = (String) searchMap.get("category");
+        if(category!=null && !"".equals(category)){
+            //设置分类筛选条件
+            Criteria categorycriteria1 = new Criteria("item_category").is(category);
+            FilterQuery filterQuery = new SimpleFacetQuery(categorycriteria1);
+            //将过滤条件查询对象关联到主查询对象
+            query.addFilterQuery(filterQuery);
+        }
+
+        //规格过滤条件查询
+        Map<String,String> specMap = (Map<String, String>) searchMap.get("spec");
+        if(searchMap!=null){
+            //从map中获取规格名称和选择的规格选项值
+            for (String key : specMap.keySet()) {
+                //设置规格筛选条件
+                Criteria specCriteria1 = new Criteria("item_spec_" + key).is(specMap.get(key));
+                FilterQuery filterQuery = new SimpleFacetQuery(specCriteria1);
+                //将过滤条件查询对象关联到主对象
+                query.addFilterQuery(filterQuery);
+            }
+        }
+
+        //价格区间过滤条件筛选
+        String price = (String) searchMap.get("price");
+        if(price!=null && !"".equals(price)){
+            //设置价格区间筛选条件
+            String[] prices = price.split("-");
+            if(!prices[0].equals("0")){
+                //设置价格区间筛选条件
+                Criteria pricecriteria1 = new Criteria("item_price").greaterThanEqual(prices[0]);
+                FilterQuery filterQuery = new SimpleFacetQuery(pricecriteria1);
+                query.addFilterQuery(filterQuery);
+            }
+            if(!prices[1].equals("*")){
+                //设置价格区间筛选条件
+                Criteria pricecriteria1 = new Criteria("item_price").lessThanEqual(prices[1]);
+                FilterQuery filterQuery = new SimpleFacetQuery(pricecriteria1);
+                query.addFilterQuery(filterQuery);
+            }
+        }
+
+        //排序查询
+        String sortField = (String) searchMap.get("sortField");
+        String sort = (String) searchMap.get("sort");
+        if(sortField!=null && !"".equals(sortField)){
+            //设置排序条件
+            if(sort.equals("ASC")){//升序
+                query.addSort(new Sort(Sort.Direction.ASC,"item_"+sortField));
+            }else{
+                //降序
+                query.addSort(new Sort(Sort.Direction.DESC,"item_"+sortField));
+            }
+        }
+
+
 
         //设置高亮处理
         HighlightOptions highlightOptions = new HighlightOptions();
