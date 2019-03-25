@@ -6,8 +6,10 @@ import com.pinyougou.search.service.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.solr.core.SolrTemplate;
 import org.springframework.data.solr.core.query.Criteria;
+import org.springframework.data.solr.core.query.HighlightOptions;
 import org.springframework.data.solr.core.query.HighlightQuery;
 import org.springframework.data.solr.core.query.SimpleHighlightQuery;
+import org.springframework.data.solr.core.query.result.HighlightEntry;
 import org.springframework.data.solr.core.query.result.HighlightPage;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,11 +55,33 @@ public class SearchServiceImpl implements SearchService {
         //将关键字所搜条件赋予查询对象
         query.addCriteria(criteria);
 
-        //高亮条件分页查询
+        //设置高亮处理
+        HighlightOptions highlightOptions = new HighlightOptions();
+        //设置高亮字段
+        highlightOptions.addField("item_title");
+        //设置高亮前后缀
+        highlightOptions.setSimplePrefix("<font color='red'>");
+        highlightOptions.setSimplePostfix("</font>");
+        query.setHighlightOptions(highlightOptions);
 
         HighlightPage<TbItem> page = solrTemplate.queryForHighlightPage(query, TbItem.class);
         //获取当前页商品列表数据
         List<TbItem> content = page.getContent();
+        //高亮结果处理
+        for (TbItem item : content) {
+            List<HighlightEntry.Highlight> highlights = page.getHighlights(item);
+            //判断有没有高亮内容
+            if(highlights.size()>0){
+                HighlightEntry.Highlight highlight = highlights.get(0);
+                //获取高亮内容
+                List<String> snipplets = highlight.getSnipplets();
+               //如果集合有内容,就进行替换高亮内容
+                if(snipplets.size()>0){
+                    item.setTitle(snipplets.get(0));
+                }
+            }
+        }
+
         Map<String,Object> resultMap = new HashMap<>();
         resultMap.put("rows",content);
         return resultMap;
