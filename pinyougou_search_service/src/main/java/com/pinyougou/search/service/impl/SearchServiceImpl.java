@@ -117,7 +117,11 @@ public class SearchServiceImpl implements SearchService {
             }
         }
 
-
+        //分页条件查询
+        Integer pageNo = (Integer) searchMap.get("pageNo");
+        Integer pageSize = (Integer) searchMap.get("pageSize");
+        query.setOffset((pageNo-1)*pageSize);//分页起始值
+        query.setRows(pageSize);//每条记录数
 
         //设置高亮处理
         HighlightOptions highlightOptions = new HighlightOptions();
@@ -148,6 +152,8 @@ public class SearchServiceImpl implements SearchService {
 
         Map<String,Object> resultMap = new HashMap<>();
         resultMap.put("rows",content);
+        resultMap.put("totalPages",page.getTotalPages());
+        resultMap.put("pageNo",pageNo);
         return resultMap;
     }
 }
