@@ -27,15 +27,15 @@
 			<div class="crumb-wrap">
 				<ul class="sui-breadcrumb">
 					<li>
-						<a href="#">手机、数码、通讯</a>
+						<a href="#">${goods.categoryMap.category1Name}</a>
 					</li>
 					<li>
-						<a href="#">手机</a>
+						<a href="#">${goods.categoryMap.category2Name}</a>
 					</li>
 					<li>
-						<a href="#">Apple苹果</a>
+						<a href="#">${goods.categoryMap.category3Name}</a>
 					</li>
-					<li class="active">iphone 6S系类</li>
+					<li class="active">${goods.goods.goodsName}</li>
 				</ul>
 			</div>
 			<!--product-info-->
@@ -43,29 +43,27 @@
 				<div class="fl preview-wrap">
 					<!--放大镜效果-->
 					<div class="zoom">
-						<!--默认第一个预览-->
-						<div id="preview" class="spec-preview">
-							<span class="jqzoom"><img jqimg="img/_/b1.png" src="img/_/s1.png" /></span>
-						</div>
-						<!--下方的缩略图-->
-						<div class="spec-scroll">
-							<a class="prev">&lt;</a>
-							<!--左右按钮-->
-							<div class="items">
-								<ul>
-									<li><img src="img/_/s1.png" bimg="img/_/b1.png" onmousemove="preview(this)" /></li>
-									<li><img src="img/_/s2.png" bimg="img/_/b2.png" onmousemove="preview(this)" /></li>
-									<li><img src="img/_/s3.png" bimg="img/_/b3.png" onmousemove="preview(this)" /></li>
-									<li><img src="img/_/s1.png" bimg="img/_/b1.png" onmousemove="preview(this)" /></li>
-									<li><img src="img/_/s2.png" bimg="img/_/b2.png" onmousemove="preview(this)" /></li>
-									<li><img src="img/_/s3.png" bimg="img/_/b3.png" onmousemove="preview(this)" /></li>
-									<li><img src="img/_/s1.png" bimg="img/_/b1.png" onmousemove="preview(this)" /></li>
-									<li><img src="img/_/s2.png" bimg="img/_/b2.png" onmousemove="preview(this)" /></li>
-									<li><img src="img/_/s3.png" bimg="img/_/b3.png" onmousemove="preview(this)" /></li>
-								</ul>
-							</div>
-							<a class="next">&gt;</a>
-						</div>
+						<#--获取图片列表对象-->
+						<#assign imageList=goods.goodsDesc.itemImages?eval/>
+							<#if (imageList?size > 0)>
+								<!--默认第一个预览-->
+								<div id="preview" class="spec-preview">
+									<span class="jqzoom"><img jqimg="${imageList[0].url}" src="${imageList[0].url}" width="400px" height="400px"/></span>
+								</div>
+								<!--下方的缩略图-->
+								<div class="spec-scroll">
+									<a class="prev">&lt;</a>
+									<!--左右按钮-->
+									<div class="items">
+										<ul>
+											<#list imageList as image>
+												<li><img src="${image.url}" bimg="${image.url}" onmousemove="preview(this)" /></li>
+											</#list>
+										</ul>
+									</div>
+									<a class="next">&gt;</a>
+								</div>
+							</#if>
 					</div>
 				</div>
 				<div class="fr itemInfo-wrap">
