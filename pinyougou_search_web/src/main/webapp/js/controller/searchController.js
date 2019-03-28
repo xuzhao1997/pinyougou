@@ -1,4 +1,4 @@
-app.controller("searchController",function ($scope,$controller,searchService) {
+app.controller("searchController",function ($scope,$controller,$location,searchService) {
 
     //继承分页
     $controller("baseController",{$scope:$scope});
@@ -15,13 +15,22 @@ app.controller("searchController",function ($scope,$controller,searchService) {
         pageNo:1,
         pageSize:60
     };
+
+    var keywords = $location.search()["keywords"];
+        if(keywords != "undefined"){
+             $scope.searchMap.keywords=keywords;
+        }else{
+            $scope.searchMap.keywords="";
+        }
+
     //商品搜索功能
     $scope.search=function () {
         searchService.searchItem($scope.searchMap).success(function (response) {
             $scope.resultMap=response;
             buildPageLabel();//构建分页工具条
         })
-    }
+    };
+
 
     //条件过滤查询
     $scope.addFilterCondition=function (key,value) {
