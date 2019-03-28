@@ -18,6 +18,13 @@ import com.pinyougou.pojo.TbGoodsExample.Criteria;
 import com.pinyougou.sellergoods.service.GoodsService;
 
 import entity.PageResult;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
+
+import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.Session;
 
 /**
  * 服务实现层
@@ -45,6 +52,14 @@ public class GoodsServiceImpl implements GoodsService {
 	@Autowired
     private TbItemMapper itemMapper;
 
+	@Autowired
+	private JmsTemplate jmsTemplate;
+
+	@Autowired
+	private Destination addItemSolrDestination;
+
+	@Autowired
+	private Destination deleItemSolrDestination;
 	
 	/**
 	 * 查询全部
@@ -262,6 +277,26 @@ public class GoodsServiceImpl implements GoodsService {
             TbGoods tbGoods = goodsMapper.selectByPrimaryKey(id);
             if(tbGoods.getAuditStatus().equals("1")){
                 tbGoods.setIsMarketable(isMarketable);
+                //商品上架,同步上架商品到索引库
+				if("1".equals(isMarketable)){
+					jmsTemplate.send(addItemSolrDestination, new MessageCreator() {
+						@Override
+						public Message createMessage(Session session) throws JMSException {
+							return session.createTextMessage(id+"");
+						}
+					});
+				}
+
+				//商品下架,同步删除索引库下架商品
+				if("0".equals(isMarketable)){
+					jmsTemplate.send(deleItemSolrDestination, new MessageCreator() {
+						@Override
+						public Message createMessage(Session session) throws JMSException {
+							return session.createTextMessage(id+"");
+						}
+					});
+				}
+
                 goodsMapper.updateByPrimaryKey(tbGoods);
             }else{
                 throw new RuntimeException("只有审核通过的商品才能上架");
