@@ -15,4 +15,9 @@ app.controller("indexController",function ($scope,$controller,contentService) {
         })
     }
 
+    //门户网站对接搜索模块,搜索功能
+    $scope.search=function () {
+        location.href="http://search.pinyougou.com/search.html#?keywords="+$scope.keywords;
+    }
+
 });
