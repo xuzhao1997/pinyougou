@@ -60,7 +60,14 @@ public class GoodsServiceImpl implements GoodsService {
 
 	@Autowired
 	private Destination deleItemSolrDestination;
-	
+
+	@Autowired
+	private Destination addItemPageDestination;
+
+	@Autowired
+	private Destination deleItemPageDestination;
+
+
 	/**
 	 * 查询全部
 	 */
@@ -287,6 +294,16 @@ public class GoodsServiceImpl implements GoodsService {
 					});
 				}
 
+				//商品上架,同步生成商品静态详情页
+				if("1".equals(isMarketable)){
+					jmsTemplate.send(addItemPageDestination, new MessageCreator() {
+						@Override
+						public Message createMessage(Session session) throws JMSException {
+							return session.createTextMessage(id+"");
+						}
+					});
+				}
+
 				//商品下架,同步删除索引库下架商品
 				if("0".equals(isMarketable)){
 					jmsTemplate.send(deleItemSolrDestination, new MessageCreator() {
@@ -296,6 +313,17 @@ public class GoodsServiceImpl implements GoodsService {
 						}
 					});
 				}
+				//商品下架,同步删除商品静态详情页
+				if("0".equals(isMarketable)){
+					jmsTemplate.send(deleItemPageDestination, new MessageCreator() {
+						@Override
+						public Message createMessage(Session session) throws JMSException {
+							return session.createTextMessage(id+"");
+						}
+					});
+				}
+
+
 
                 goodsMapper.updateByPrimaryKey(tbGoods);
             }else{
