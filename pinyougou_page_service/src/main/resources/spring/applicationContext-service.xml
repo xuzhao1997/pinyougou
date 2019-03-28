@@ -16,6 +16,15 @@
     <dubbo:registry address="zookeeper://192.168.25.159:2181"/>
 	<!--通过包扫描注解的形式，发布服务-->
     <dubbo:annotation package="com.pinyougou.page.service.impl" />
-   
-   
+
+
+	<!-- 页面静态化模板配置 -->
+	<bean id="freemarkerConfig"
+		  class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+		<!--指定模板存放路径-->
+		<property name="templateLoaderPath" value="/WEB-INF/ftl/" />
+		<!--指定模板字符集编码-->
+		<property name="defaultEncoding" value="UTF-8" />
+	</bean>
+
 </beans>
