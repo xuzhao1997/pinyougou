@@ -1,9 +1,13 @@
 package com.pinyougou.user.service.impl;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
+import com.alibaba.fastjson.JSON;
 import com.pinyougou.user.service.UserService;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.github.pagehelper.Page;
@@ -14,6 +18,8 @@ import com.pinyougou.pojo.TbUserExample;
 import com.pinyougou.pojo.TbUserExample.Criteria;
 
 import entity.PageResult;
+import org.springframework.data.redis.core.RedisTemplate;
+import util.HttpClient;
 
 /**
  * 服务实现层
@@ -25,6 +31,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private TbUserMapper userMapper;
+
+	@Autowired
+	private RedisTemplate redisTemplate;
 	
 	/**
 	 * 查询全部
@@ -148,5 +157,32 @@ public class UserServiceImpl implements UserService {
 		Page<TbUser> page= (Page<TbUser>)userMapper.selectByExample(example);		
 		return new PageResult(page.getTotal(), page.getResult());
 	}
-	
+
+
+	/**
+	* @Description: 发送短信验证码
+	* @Author:      XuZhao
+	* @CreateDate:  19/03/29 下午 08:30
+	*/
+	@Override
+	public void sendSmsCode(String phone) throws Exception {
+		//生成随机六位验证码
+		//随机取1到9的数字
+		int num = (int)(Math.random() * 9 + 1);
+		String smsCode = num + RandomStringUtils.randomNumeric(5);
+		//将验证码保存在redis缓存中,时长为10 分钟
+		redisTemplate.boundValueOps(phone).set(smsCode,10L,TimeUnit.MINUTES);
+		//将验证码发送到用户手机中
+        HttpClient httpClient = new HttpClient("http://localhost:9999/sms/sendSms.do");
+        //设置请求参数
+        httpClient.addParameter("phoneNumbers",phone);
+        httpClient.addParameter("signName","品优购网上购物系统");
+        httpClient.addParameter("templateCode","SMS_162520844");
+        httpClient.addParameter("param","{\"code\":"+smsCode+"}");
+        httpClient.post();
+        String content = httpClient.getContent();
+        System.out.println(content);
+        //Map map = JSON.parseObject(content, Map.class);
+    }
+
 }
