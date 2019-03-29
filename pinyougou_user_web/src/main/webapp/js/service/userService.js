@@ -28,5 +28,11 @@ app.service('userService',function($http){
 	//搜索
 	this.search=function(page,rows,searchEntity){
 		return $http.post('user/search.do?page='+page+"&rows="+rows, searchEntity);
-	}    	
+	}
+	//发送验证码
+	this.sendSmsCode=function (phone) {
+		return $http.get('user/sendSmsCode.do?phone='+phone);
+    }
+
+
 });
