@@ -15,7 +15,7 @@
 
 	<!-- solr服务器地址  注意：如果使用的是默认仓库collection1，连接地址可以省略索引库名称
 		如果使用的是不默认仓库collection1，连接地址必须添加索引库名称-->
-	<solr:solr-server id="solrServer" url="http://127.0.0.1:8080/solr" />
+	<solr:solr-server id="solrServer" url="http://192.168.25.159:8888/solr" />
 	<!-- solr模板，使用solr模板可对索引库进行CRUD的操作 -->
 	<bean id="solrTemplate" class="org.springframework.data.solr.core.SolrTemplate">
 		<constructor-arg ref="solrServer" />
