@@ -110,5 +110,21 @@ public class UserController {
 	public PageResult search(@RequestBody TbUser user, int page, int rows  ){
 		return userService.findPage(user, page, rows);		
 	}
-	
+
+
+	/**
+	* @Description: 发送短信验证码
+	* @Author:      XuZhao
+	* @CreateDate:  19/03/29 下午 08:04
+	*/
+	@RequestMapping("/sendSmsCode")
+	public Result sendSmsCode(String phone){
+		try {
+			userService.sendSmsCode(phone);
+			return new Result(true,"验证码发送成功!!!");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new Result(true,"验证码发送失败!!!");
+		}
+	}
 }
