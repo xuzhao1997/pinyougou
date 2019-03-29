@@ -47,8 +47,13 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping("/add")
-	public Result add(@RequestBody TbUser user){
+	public Result add(@RequestBody TbUser user,String smsCode){
 		try {
+			//验证码校验
+			boolean result = userService.checkSmsCode(user.getPhone(),smsCode);
+			if(result==false){
+				return new Result(false, "验证码校验失败");
+			}
 			userService.add(user);
 			return new Result(true, "增加成功");
 		} catch (Exception e) {
