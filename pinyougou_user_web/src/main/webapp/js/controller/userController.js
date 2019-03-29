@@ -94,5 +94,15 @@ app.controller('userController' ,function($scope,$controller   ,userService){
 			}			
 		);
 	}
+	//发送验证码
+	$scope.sendSmsCode=function () {
+		userService.sendSmsCode($scope.entity.phone).success(function (response) {
+			if(response.success){
+				alert(response.message);
+			}
+        })
+    }
+
+
     
 });	
