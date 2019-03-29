@@ -65,4 +65,11 @@ public interface UserService {
 	* @CreateDate:  19/03/29 下午 08:30
 	*/
     void sendSmsCode(String phone) throws Exception;
+
+    /**
+    * @Description: 验证码校验
+    * @Author:      XuZhao
+    * @CreateDate:  19/03/29 下午 09:49
+    */
+	boolean checkSmsCode(String phone, String smsCode);
 }
