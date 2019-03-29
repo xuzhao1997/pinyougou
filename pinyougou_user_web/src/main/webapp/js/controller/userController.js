@@ -58,7 +58,7 @@ app.controller('userController' ,function($scope,$controller   ,userService){
 			alert("您输入的两次密码不一致!!!");
 			return;
 		}
-        userService.add( $scope.entity).success(
+        userService.add( $scope.entity,$scope.smsCode).success(
             function(response){
                 if(response.success){
                     //重新查询
