@@ -1,4 +1,5 @@
 package com.pinyougou.user.service;
+import java.io.IOException;
 import java.util.List;
 import com.pinyougou.pojo.TbUser;
 
@@ -57,5 +58,11 @@ public interface UserService {
 	 * @return
 	 */
 	public PageResult findPage(TbUser user, int pageNum, int pageSize);
-	
+
+	/**
+	* @Description: 发送短信验证码
+	* @Author:      XuZhao
+	* @CreateDate:  19/03/29 下午 08:30
+	*/
+    void sendSmsCode(String phone) throws Exception;
 }
