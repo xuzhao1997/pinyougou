@@ -72,6 +72,8 @@ public class UserServiceImpl implements UserService {
 		//短信是否验证
 		user.setIsMobileCheck("1");
 		userMapper.insert(user);
+        //注册成功后,要清空缓存的验证码
+        redisTemplate.delete(user.getPhone());
 	}
 
 	
@@ -183,6 +185,26 @@ public class UserServiceImpl implements UserService {
         String content = httpClient.getContent();
         System.out.println(content);
         //Map map = JSON.parseObject(content, Map.class);
+    }
+
+
+    /**
+    * @Description: 验证码校验
+    * @Author:      XuZhao
+    * @CreateDate:  19/03/29 下午 09:49
+    */
+    @Override
+    public boolean checkSmsCode(String phone, String smsCode) {
+       //获取系统验证码
+        String sysCode = (String) redisTemplate.boundValueOps(phone).get();
+        if(sysCode == null){
+            return false;
+        }
+
+        if(!sysCode.equals(smsCode)){
+            return false;
+        }
+        return true;
     }
 
 }
