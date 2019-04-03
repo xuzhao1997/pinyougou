@@ -86,7 +86,7 @@
         <dependency>
             <groupId>com.pinyougou</groupId>
             <artifactId>pinyougou_order_interface</artifactId>
-            <version>16.0-SNAPSHOT</version>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
 
     </dependencies>
