@@ -87,13 +87,13 @@ public class PayServiceImpl implements PayService {
     */
     @Override
     public Map<String, String> queryPayStatus(String out_trade_no) throws Exception {
-        //1、组装调用查询支付状态接口所必须准备的参数
+        //组装调用查询支付状态接口所必须准备的参数
         Map<String,String> paramMap = new HashMap<>();
         paramMap.put("appid",appid);
         paramMap.put("mch_id",partner);
-        paramMap.put("nonce_str", WXPayUtil.generateNonceStr());//随机字符串
+        paramMap.put("nonce_str",WXPayUtil.generateNonceStr());//随机字符串
         paramMap.put("out_trade_no",out_trade_no);
-        //2、调用查询微信支付状态generateSignedXml
+        //调用查询微信支付状态
         String paramxml = WXPayUtil.generateSignedXml(paramMap, partnerkey);
         System.out.println(paramxml);
         HttpClient httpClient = new HttpClient("https://api.mch.weixin.qq.com/pay/orderquery");
@@ -101,11 +101,11 @@ public class PayServiceImpl implements PayService {
         httpClient.setXmlParam(paramxml);
         httpClient.post();
 
-        //3、处理支付平台返回的响应结果
+        //处理支付平台返回的响应结果
         String resultXml = httpClient.getContent();
         System.out.println(resultXml);
         Map<String, String> resultMap = WXPayUtil.xmlToMap(resultXml);
+
         return resultMap;
     }
-
 }
