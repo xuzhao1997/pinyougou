@@ -16,7 +16,27 @@ app.controller('payController' ,function($scope,$controller   ,payService){
                 value: response.code_url,
                 level:'H'
             });
+            //二维码生成后,就开始一直查询支付状态
+            $scope.queryPayStatus();
         })
     }
+
+    //查询支付状态
+    $scope.queryPayStatus=function () {
+        payService.queryPayStatus($scope.out_trade_no).success(function (response) {
+            if(response.success){
+                //支付成功
+                location.href="paysuccess.html";
+            }else {
+                //支付超时
+                if(response.message=="timeout"){
+                    $scope.createNative();
+                }
+                //支付失败
+                location.href="payfail.html";
+            }
+        })
+    }
+
 
 });
