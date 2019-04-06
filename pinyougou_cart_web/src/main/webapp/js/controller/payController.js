@@ -1,5 +1,5 @@
  //控制层 
-app.controller('payController' ,function($scope,$controller   ,payService){
+app.controller('payController' ,function($scope,$controller   ,$location,payService){
 	
 	$controller('baseController',{$scope:$scope});//继承
 
@@ -26,7 +26,7 @@ app.controller('payController' ,function($scope,$controller   ,payService){
         payService.queryPayStatus($scope.out_trade_no).success(function (response) {
             if(response.success){
                 //支付成功
-                location.href="paysuccess.html";
+                location.href="paysuccess.html#?money="+$scope.total_fee;
             }else {
                 //支付超时
                 if(response.message=="timeout"){
@@ -38,5 +38,9 @@ app.controller('payController' ,function($scope,$controller   ,payService){
         })
     }
 
+    //获取支付金额
+    $scope.getMoney=function () {
+        $scope.money = $location.search()["money"];
+    }
 
 });
