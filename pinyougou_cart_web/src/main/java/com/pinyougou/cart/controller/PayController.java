@@ -68,6 +68,9 @@ public class PayController {
                 //获取支付状态
                 String trade_state = resultMap.get("trade_state");
                 if("SUCCESS".equals(trade_state)){
+                    //支付成功,更新订单状态和支付日志状态
+                    String transaction_id = resultMap.get("transaction_id");//微信交易流水号
+                    payService.updatePayStatus(out_trade_no,transaction_id);
                     return new Result(true,"支付成功!!!");
                 }
             }
