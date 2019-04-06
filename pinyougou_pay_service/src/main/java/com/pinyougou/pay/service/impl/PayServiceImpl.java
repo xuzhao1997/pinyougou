@@ -2,7 +2,10 @@ package com.pinyougou.pay.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
 import com.github.wxpay.sdk.WXPayUtil;
+import com.pinyougou.mapper.TbOrderMapper;
+import com.pinyougou.mapper.TbPayLogMapper;
 import com.pinyougou.pay.service.PayService;
+import com.pinyougou.pojo.TbOrder;
 import com.pinyougou.pojo.TbPayLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,6 +13,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import util.HttpClient;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,6 +45,12 @@ public class PayServiceImpl implements PayService {
 
     @Autowired
     private RedisTemplate redisTemplate;
+
+    @Autowired
+    private TbPayLogMapper payLogMapper;
+
+    @Autowired
+    private TbOrderMapper orderMapper;
 
 
     /**
@@ -124,5 +134,34 @@ public class PayServiceImpl implements PayService {
     @Override
     public TbPayLog getPayLog(String userId) {
         return (TbPayLog) redisTemplate.boundHashOps("payLog").get(userId);
+    }
+
+
+    /**
+    * @Description: 支付成功,更新订单状态和支付日志状态
+    * @Author:      XuZhao
+    * @CreateDate:  19/04/06 下午 08:04
+    */
+    @Override
+    public void updatePayStatus(String out_trade_no, String transaction_id) {
+
+        TbPayLog payLog = payLogMapper.selectByPrimaryKey(out_trade_no);
+        payLog.setPayTime(new Date());
+        payLog.setTradeState("2");//已付款
+        //交易流水好
+        payLog.setTransactionId(transaction_id);
+        payLogMapper.updateByPrimaryKey(payLog);
+        //更新订单状态
+        String orderList = payLog.getOrderList();
+        String[] orders = orderList.split(",");
+        for (String orderId : orders) {
+            //跟新订单状态
+            TbOrder tbOrder = orderMapper.selectByPrimaryKey(Long.parseLong(orderId));
+            tbOrder.setStatus("2");//已付款
+            tbOrder.setPaymentTime(new Date());
+            orderMapper.updateByPrimaryKey(tbOrder);
+        }
+        //支付成功后,清除redis中记录的支付日志
+        redisTemplate.boundHashOps("payLog").delete(payLog.getUserId());
     }
 }
