@@ -3,7 +3,10 @@ package com.pinyougou.pay.service.impl;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.github.wxpay.sdk.WXPayUtil;
 import com.pinyougou.pay.service.PayService;
+import com.pinyougou.pojo.TbPayLog;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import util.HttpClient;
 
@@ -35,6 +38,9 @@ public class PayServiceImpl implements PayService {
     //回调地址
     @Value("${notifyurl}")
     private String notifyurl;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
 
     /**
@@ -107,5 +113,16 @@ public class PayServiceImpl implements PayService {
         Map<String, String> resultMap = WXPayUtil.xmlToMap(resultXml);
 
         return resultMap;
+    }
+
+
+    /**
+    * @Description: 获取支付订单号,和支付金额,
+    * @Author:      XuZhao
+    * @CreateDate:  19/04/06 下午 07:46
+    */
+    @Override
+    public TbPayLog getPayLog(String userId) {
+        return (TbPayLog) redisTemplate.boundHashOps("payLog").get(userId);
     }
 }
