@@ -2,7 +2,9 @@ package com.pinyougou.cart.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.pinyougou.pay.service.PayService;
+import com.pinyougou.pojo.TbPayLog;
 import entity.Result;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import util.IdWorker;
@@ -31,10 +33,11 @@ public class PayController {
      */
     @RequestMapping("/createNative")
     public Map<String, Object> createNative() {
-        //TODO 为了测试,基于假的支付订单号和支付金额,后面完成后再修改
-        IdWorker idWorker = new IdWorker();
         try {
-           return payService.createNative(idWorker.nextId()+"","1");
+            //获取支付订单号,和支付金额,
+            String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+           TbPayLog payLog =  payService.getPayLog(userId);
+           return payService.createNative(payLog.getOutTradeNo(),payLog.getTotalFee()+"");
         } catch (Exception e) {
             e.printStackTrace();
             return new HashMap<>();
