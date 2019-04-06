@@ -34,4 +34,11 @@ public interface PayService {
     * @CreateDate:  19/04/06 下午 07:45
     */
     TbPayLog getPayLog(String userId);
+
+    /**
+    * @Description: 支付成功,更新订单状态和支付日志状态
+    * @Author:      XuZhao
+    * @CreateDate:  19/04/06 下午 08:03
+    */
+    void updatePayStatus(String out_trade_no, String transaction_id);
 }
