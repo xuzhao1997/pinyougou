@@ -25,5 +25,4 @@ public interface PayService {
     */
 
     public Map<String,String> queryPayStatus(String out_trade_no) throws Exception;
-
 }
