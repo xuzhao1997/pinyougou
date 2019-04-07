@@ -64,6 +64,13 @@ public class SeckillServiceImpl implements SeckillService {
     */
     @Override
     public void submitSeckillOrder(Long seckillGoodsId,String userId) {
+        //判断当前用户是否购买过当前商品
+        Boolean member = redisTemplate.boundSetOps("seckill_goods_" + seckillGoodsId).isMember(userId);
+
+        if(member){
+            throw  new RuntimeException("不好意思,秒杀商品只能购买一个呦!!!");
+        }
+
         //获取秒杀商品
         TbSeckillGoods seckillGoods =  (TbSeckillGoods) redisTemplate.boundHashOps("seckill_goods").get(seckillGoodsId);
         //判断是否还有商品
@@ -90,6 +97,10 @@ public class SeckillServiceImpl implements SeckillService {
         seckillOrderMapper.insert(seckillOrder);
         //秒杀下单,要将redis中秒杀商品库存减1
         seckillGoods.setStockCount(seckillGoods.getStockCount()-1);
+
+        //在redis中,记录当前用户购买过当前商品
+        redisTemplate.boundSetOps("seckill_goods_"+seckillGoodsId).add(userId);
+
         //同步数据库的时机,当库存为0或者秒杀结束
         if(seckillGoods.getStockCount()==0 || (new Date().getTime() > seckillGoods.getEndTime().getTime())){
             //更新秒杀商品库存到数据库
