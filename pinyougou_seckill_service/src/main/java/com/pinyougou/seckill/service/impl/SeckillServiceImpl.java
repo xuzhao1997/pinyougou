@@ -71,12 +71,17 @@ public class SeckillServiceImpl implements SeckillService {
             throw  new RuntimeException("不好意思,秒杀商品只能购买一个呦!!!");
         }
 
+        //限制库存,解决超卖问题,先从redis队列中获取信息
+        Object obj = redisTemplate.boundListOps("seckill_goods_queue_" + seckillGoodsId).rightPop();
+        if(obj==null){
+            throw  new RuntimeException("不好意思,您手慢了,商品已经售罄了");
+        }
         //获取秒杀商品
         TbSeckillGoods seckillGoods =  (TbSeckillGoods) redisTemplate.boundHashOps("seckill_goods").get(seckillGoodsId);
         //判断是否还有商品
-        if(seckillGoods == null || seckillGoods.getStockCount() <= 0){
+        /*if(seckillGoods == null || seckillGoods.getStockCount() <= 0){
             throw  new RuntimeException("不好意思,您手慢了,商品已经售罄了");
-        }
+        }*/
         //生成秒杀订单
         TbSeckillOrder seckillOrder = new TbSeckillOrder();
         //id
