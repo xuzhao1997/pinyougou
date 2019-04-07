@@ -70,6 +70,9 @@ public class SeckillServiceImpl implements SeckillService {
             throw  new RuntimeException("不好意思,秒杀商品只能购买一个呦!!!");
         }
 
+        //进入一个线程,秒杀排队人数加1
+        redisTemplate.boundValueOps("seckill_goods_queue_"+seckillGoodsId).increment(1);
+
         //限制库存,解决超卖问题,先从redis队列中获取信息
         Object obj = redisTemplate.boundListOps("seckill_goods_queue_" + seckillGoodsId).rightPop();
         if(obj==null){
@@ -81,6 +84,13 @@ public class SeckillServiceImpl implements SeckillService {
         /*if(seckillGoods == null || seckillGoods.getStockCount() <= 0){
             throw  new RuntimeException("不好意思,您手慢了,商品已经售罄了");
         }*/
+        //获取排队人数
+        Long size = redisTemplate.boundValueOps("seckill_goods_queue_" + seckillGoodsId).size();
+        //当排队人数大于秒杀商品库存指定值（例如：20），提醒排队人数过多
+        Integer stockCount = seckillGoods.getStockCount();
+        if(size>(stockCount+20)){
+            throw new RuntimeException("排队人数过多");
+        }
 
         Map<String,Object> map = new HashMap<>();
         map.put("seckillGoodsId",seckillGoodsId);
