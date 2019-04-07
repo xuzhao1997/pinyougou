@@ -5,7 +5,9 @@ app.service('seckillService',function($http){
 	this.selectSeckillGoodsList=function(){
 		return $http.get('seckill/selectSeckillGoodsList.do');
 	}
-
-
+	//基于秒杀商品id查询秒杀商品详情
+    this.findOne=function (seckillGoodsId) {
+        return $http.get("seckill/findOne.do?seckillGoodsId="+seckillGoodsId);
+    }
 
 });
