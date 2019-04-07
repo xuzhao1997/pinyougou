@@ -31,4 +31,14 @@ public class SeckillServiceImpl implements SeckillService {
     public List<TbSeckillGoods> selectSeckillGoodsFromRedis() {
         return redisTemplate.boundHashOps("seckill_goods").values();
     }
+
+    /**
+    * @Description: 基于秒杀商品id查询秒杀商品详情
+    * @Author:      XuZhao
+    * @CreateDate:  19/04/07 下午 04:05
+    */
+    @Override
+    public TbSeckillGoods findOne(Long seckillGoodsId) {
+        return (TbSeckillGoods) redisTemplate.boundHashOps("seckill_goods").get(seckillGoodsId);
+    }
 }
