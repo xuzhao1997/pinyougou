@@ -10,4 +10,8 @@ app.service('seckillService',function($http){
         return $http.get("seckill/findOne.do?seckillGoodsId="+seckillGoodsId);
     }
 
+    //生成秒杀订单
+    this.submitSeckillOrder=function (seckillGoodsId) {
+        return $http.get("seckill/submitSeckillOrder.do?seckillGoodsId="+seckillGoodsId);
+    }
 });
