@@ -19,4 +19,12 @@ public interface SeckillService {
      */
     public List<TbSeckillGoods> selectSeckillGoodsFromRedis();
 
+    /**
+    * @Description: 基于秒杀商品id查询秒杀商品详情
+    * @Author:      XuZhao
+    * @CreateDate:  19/04/07 下午 04:03
+    */
+    public TbSeckillGoods findOne(Long seckillGoodsId);
+
+
 }
