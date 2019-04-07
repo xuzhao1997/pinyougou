@@ -59,7 +59,10 @@ public class seckillController {
             }
             seckillService.submitSeckillOrder(seckillGoodsId,userId);
             return new Result(true,"保存订单成功!!!");
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            return new Result(false,e.getMessage());
+        }catch (Exception e) {
             e.printStackTrace();
             return new Result(false,"保存订单失败!!!");
         }
