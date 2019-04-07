@@ -44,7 +44,13 @@ public class seckillTask {
         //将秒杀商品一个个存入redis,为了方便基于商品id获取秒杀商品内容,展示在秒杀 商品详情页
         for (TbSeckillGoods seckillGoods : seckillGoodsList) {
             redisTemplate.boundHashOps("seckill_goods").put(seckillGoods.getId(),seckillGoods);
-            //List list = redisTemplate.boundHashOps("seckill_goods").values();
+
+            //基于redis队列,记录当前秒杀商品还剩多少个
+            //获取当前商品剩余库存数
+            Integer stockCount = seckillGoods.getStockCount();
+            for(int i = 0; i < stockCount;i++){
+                redisTemplate.boundListOps("seckill_goods_queue_"+seckillGoods.getId()).leftPush(seckillGoods.getId());
+            }
         }
         System.out.println("synchronizeSeckillGoodsToRedis finish....");
 
