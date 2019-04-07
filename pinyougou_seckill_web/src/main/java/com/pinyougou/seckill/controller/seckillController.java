@@ -32,6 +32,13 @@ public class seckillController {
         return seckillService.selectSeckillGoodsFromRedis();
     }
 
-
-
+    /**
+    * @Description: 基于秒杀商品id查询秒杀商品详情
+    * @Author:      XuZhao
+    * @CreateDate:  19/04/07 下午 04:06
+    */
+    @RequestMapping("/findOne")
+    public TbSeckillGoods findOne(Long seckillGoodsId){
+        return seckillService.findOne(seckillGoodsId);
+    }
 }
