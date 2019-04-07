@@ -66,6 +66,8 @@ public class CreateOrder implements Runnable{
         //在redis中,记录当前用户购买过当前商品
         redisTemplate.boundSetOps("seckill_goods_"+seckillGoodsId).add(userId);
 
+        //当秒杀下单完成后,排队人数减1
+        seckillGoods.setStockCount(seckillGoods.getStockCount()-1);
         //同步数据库的时机,当库存为0或者秒杀结束
         if(seckillGoods.getStockCount()==0 || (new Date().getTime() > seckillGoods.getEndTime().getTime())){
             //更新秒杀商品库存到数据库
