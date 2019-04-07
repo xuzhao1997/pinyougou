@@ -64,4 +64,17 @@ app.controller('seckillController' ,function($scope,$controller   ,$location,$in
         return timString+=hours+":"+minutes+":"+seconds;
     }
 
+    //秒杀下单
+    $scope.submitSeckillOrder=function () {
+        seckillService.submitSeckillOrder($scope.seckillGoodsId).success(function (response) {
+            if(response.success){
+                //下单成功
+                location.href="pay.html";
+            }else{
+                alert(response.message);
+            }
+        })
+    }
+
+
 });
