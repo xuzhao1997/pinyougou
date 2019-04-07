@@ -27,4 +27,10 @@ public interface SeckillService {
     public TbSeckillGoods findOne(Long seckillGoodsId);
 
 
+    /**
+    * @Description: 保存秒杀订单
+    * @Author:      XuZhao
+    * @CreateDate:  19/04/07 下午 05:02
+    */
+    void submitSeckillOrder(Long seckillGoodsId,String userId);
 }
