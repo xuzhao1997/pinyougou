@@ -8,11 +8,14 @@ import com.pinyougou.pojo.TbSeckillOrder;
 import com.pinyougou.seckill.service.SeckillService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.transaction.annotation.Transactional;
 import util.IdWorker;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName: 类名
@@ -28,14 +31,10 @@ public class SeckillServiceImpl implements SeckillService {
     private RedisTemplate redisTemplate;
 
     @Autowired
-    private IdWorker idWorker;
+    private ThreadPoolTaskExecutor executor;
 
     @Autowired
-    private TbSeckillOrderMapper seckillOrderMapper;
-
-    @Autowired
-    private TbSeckillGoodsMapper seckillGoodsMapper;
-
+    private CreateOrder createOrder;
 
     /**
     * @Description: 查询秒杀商品列表
@@ -82,40 +81,14 @@ public class SeckillServiceImpl implements SeckillService {
         /*if(seckillGoods == null || seckillGoods.getStockCount() <= 0){
             throw  new RuntimeException("不好意思,您手慢了,商品已经售罄了");
         }*/
-        //生成秒杀订单
-        TbSeckillOrder seckillOrder = new TbSeckillOrder();
-        //id
-        long seckillOrderId = idWorker.nextId();
-        seckillOrder.setId(seckillOrderId);
-        //金额
-        seckillOrder.setMoney(seckillGoods.getCostPrice());
-        //user_id
-        seckillOrder.setUserId(userId);
-        //seller_id
-        seckillOrder.setSellerId(seckillGoods.getSellerId());
-        //创建时间
-        seckillOrder.setCreateTime(new Date());
-        //状态
-        seckillOrder.setStatus("1");//1未支付
 
-        //秒杀下单保存到数据库
-        seckillOrderMapper.insert(seckillOrder);
-        //秒杀下单,要将redis中秒杀商品库存减1
-        seckillGoods.setStockCount(seckillGoods.getStockCount()-1);
-
-        //在redis中,记录当前用户购买过当前商品
-        redisTemplate.boundSetOps("seckill_goods_"+seckillGoodsId).add(userId);
-
-        //同步数据库的时机,当库存为0或者秒杀结束
-        if(seckillGoods.getStockCount()==0 || (new Date().getTime() > seckillGoods.getEndTime().getTime())){
-            //更新秒杀商品库存到数据库
-            seckillGoodsMapper.updateByPrimaryKey(seckillGoods);
-            //清除redis中秒杀商品
-            redisTemplate.boundHashOps("seckill_goods").delete(seckillGoodsId);
-        }else{
-            //秒杀下单,秒杀还没有结束,此时要更新redis缓存中秒杀商品库存
-            redisTemplate.boundHashOps("seckill_goods").put(seckillGoodsId,seckillGoods);
-        }
+        Map<String,Object> map = new HashMap<>();
+        map.put("seckillGoodsId",seckillGoodsId);
+        map.put("userId",userId);
+        //将秒杀下单的操作,作为任务存入到redis队列中
+        redisTemplate.boundListOps("seckill_order_queue").leftPush(map);
+        //开启多线程执行秒杀订单参数
+        executor.execute(createOrder);
 
     }
 }
